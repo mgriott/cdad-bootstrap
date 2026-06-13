@@ -20,18 +20,38 @@ Humans govern context.
 * Context Layers
 * ADE Integration
 
-## Quick Start
-
-```bash
-git clone https://github.com/<user>/cdad-bootstrap
-```
-
 ## Getting Started
 
 1. Download or clone this repository.
 2. Copy the CDAD structure into your project.
 3. Complete the files under `context/`.
-4. Configure your ADE to read `AGENTS.md`.
+4. Configure your ADE to read and follow AGENTS.md before making implementation decisions.
+
+## Repository Structure
+
+```text
+AGENTS.md
+
+.cdad/
+  project-context.md
+  ai-rules.md
+  governance.md
+  cdad.config.yml
+
+context/
+  vision.md
+  architecture.md
+  principles.md
+  constraints.md
+  glossary.md
+
+adr/
+  ADR-001-context-governance.md
+
+business/
+  business-rules.md
+  use-cases.md
+```
 
 ## Related Projects
 
@@ -39,6 +59,14 @@ git clone https://github.com/<user>/cdad-bootstrap
 * **CDAD Bootstrap** — Project scaffolding and context governance starter kit.
 
 CDAD Bootstrap is the practical implementation of the CDAD methodology.
+
+## Future
+
+Planned future components:
+
+* CDAD CLI (`npx cdad init`)
+* CDAD Inspector
+* CDAD Context Platform
 
 ## License
 
