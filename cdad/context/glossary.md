@@ -10,6 +10,8 @@ TODO: Define domain and technical terms used in this project.
 | ADE | Agentic Development Environment |
 | CPP | Context Protection Pattern |
 | L0 | Foundational protected context |
+| Guardrail | Operational boundary that keeps AI aligned with governed context |
+| ADR | Architecture Decision Record |
 
 ## CDAD Rule
 

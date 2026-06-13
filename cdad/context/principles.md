@@ -22,6 +22,7 @@ Examples:
 - AI must propose changes before applying architectural decisions.
 - AI must preserve consistency across modules.
 - AI must explain impact when modifying important components.
+- AI must report conflicts between implementation and context.
 
 ## Quality Principles
 
@@ -35,6 +36,18 @@ Examples:
 - Observability
 - Scalability
 - Reliability
+
+## Cloud and Platform Principles
+
+TODO: Define platform principles when applicable.
+
+Examples:
+
+- Prefer managed services when justified.
+- Use Infrastructure as Code.
+- Keep deployment repeatable.
+- Apply least privilege.
+- Maintain observability from the beginning.
 
 ## CDAD Rule
 

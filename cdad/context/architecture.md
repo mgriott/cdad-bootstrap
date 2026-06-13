@@ -32,6 +32,12 @@ Example:
 - External integrations
 - AI agents
 - Messaging layer
+- Cloud services
+- Infrastructure components
+
+## Module Boundaries
+
+TODO: Define module boundaries and responsibilities.
 
 ## Integration Strategy
 
@@ -54,14 +60,26 @@ Examples:
 - Containers
 - Hybrid
 
+## Cloud and Infrastructure Strategy
+
+TODO: Describe cloud provider, infrastructure approach, IaC strategy, networking, security, and deployment model when applicable.
+
+Examples:
+
+- AWS / Azure / GCP
+- Terraform / Pulumi / Bicep / CloudFormation
+- Kubernetes / serverless / containers
+- CI/CD
+- Observability
+
 ## Architecture Decisions
 
 TODO: Link relevant ADRs.
 
 Example:
 
-- `adr/ADR-001-context-governance.md`
+- `cdad/adr/ADR-001-context-governance.md`
 
 ## CDAD Rule
 
-AI must not change the architecture, architectural style, or main design paradigm without creating a Proposed Architecture Change or ADR.
+AI must not change the architecture, architectural style, cloud strategy, infrastructure approach, or main design paradigm without creating a Proposed Architecture Change or ADR.

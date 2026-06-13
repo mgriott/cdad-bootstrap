@@ -39,6 +39,19 @@ Examples:
 - Must preserve current domain boundaries.
 - Must not introduce async messaging without approval.
 
+## Cloud and Infrastructure Constraints
+
+TODO: Define cloud and infrastructure constraints.
+
+Examples:
+
+- Must use AWS / Azure / GCP.
+- Must use Terraform.
+- Must deploy to Kubernetes.
+- Must remain serverless.
+- Must not introduce managed services without approval.
+- Must follow security baseline.
+
 ## AI Constraints
 
 AI must not:
@@ -47,6 +60,7 @@ AI must not:
 - Add major dependencies without approval.
 - Replace architectural patterns without approval.
 - Modify L0 context files directly.
+- Replace cloud provider or infrastructure approach without approval.
 
 ## CDAD Rule
 

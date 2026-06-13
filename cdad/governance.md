@@ -8,17 +8,18 @@ Governance of Context is the set of practices, rules, and mechanisms used to con
 
 The official source of truth for this project is the governed context stored in:
 
-- `.cdad/`
-- `context/`
-- `adr/`
-- `business/`
+- `cdad/project-context.md`
+- `cdad/context/`
+- `cdad/adr/`
+- `cdad/governance.md`
+- `cdad/guardrails.md`
 
 ## Protection Levels
 
 | Level | Scope | Policy |
 |---|---|---|
 | L0 | Foundational context | Propose only |
-| L1 | Architecture and business decisions | Propose with review |
+| L1 | Architecture decisions | Propose with review |
 | L2 | Technical documentation | Editable with review |
 | L3 | Implementation | Editable |
 
@@ -28,10 +29,20 @@ The official source of truth for this project is the governed context stored in:
 - Paradigm changes.
 - Changes to principles.
 - Changes to constraints.
-- Changes to business rules.
+- Major framework changes.
+- Major infrastructure changes.
+- Major cloud platform changes.
 - Major changes in integration strategy.
 - Major changes in data model.
 - Any change affecting L0 files.
+
+## Context Freshness
+
+Governed context must remain current.
+
+If the implementation changes in a way that invalidates the context, the AI must report it as a context conflict.
+
+The Solution Designer decides whether to update context, revert implementation, or create a new ADR.
 
 ## CDAD Golden Rule
 
@@ -41,8 +52,8 @@ AI may accelerate.
 
 But AI must not redefine architecture without explicit approval from the Solution Designer.
 
-## CDAD Principle
+## Operational Boundary
 
-AI may accelerate implementation.
+CDAD does not prevent implementation.
 
-AI must not redefine the architectural direction, design principles, selected paradigm, or foundational constraints of a solution without explicit approval from the Solution Designer.
+CDAD prevents accidental architectural drift.
