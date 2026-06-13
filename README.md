@@ -3,6 +3,7 @@
 > When context doesn't govern AI, AI governs the solution.
 
 The official starter kit for Context-Driven AI Development (CDAD).
+**Context is the Source of Truth.**
 
 ## What is CDAD?
 
@@ -10,7 +11,7 @@ CDAD is a methodology for AI-assisted software development based on governed con
 
 AI accelerates implementation.
 
-Humans govern context.
+Humans govern context and architecture.
 
 ## CDAD Core Components
 
@@ -52,6 +53,32 @@ business/
   business-rules.md
   use-cases.md
 ```
+## What Should Be Customized?
+
+CDAD Bootstrap provides the governance structure and AI operating rules.
+
+In most cases, users should focus on maintaining the files under:
+```text
+context/
+```
+Specifically:
+* `context/vision.md`
+* `context/architecture.md`
+* `context/principles.md`
+* `context/constraints.md`
+These files represent the governed context and the source of truth for the project.
+The files under:
+```text
+.cdad/
+```
+and
+```text
+AGENTS.md
+```
+are part of the CDAD runtime structure and typically require little or no modification.
+The Solution Designer defines and evolves the context.
+AI agents consume and operate under that context.
+
 
 ## Related Projects
 
