@@ -1,0 +1,48 @@
+name: CDAD Bootstrap Project
+version: 1.0
+methodology: Context-Driven AI Development
+
+context:
+  entrypoint: AGENTS.md
+  project_context: .cdad/project-context.md
+  ai_rules: .cdad/ai-rules.md
+  governance: .cdad/governance.md
+
+protection_levels:
+  L0:
+    description: Foundational context. Source of truth. AI can propose changes only.
+    policy: propose_only
+    files:
+      - context/vision.md
+      - context/architecture.md
+      - context/principles.md
+      - context/constraints.md
+
+  L1:
+    description: Architecture and business context. Requires human review.
+    policy: propose_with_review
+    files:
+      - adr/**
+      - business/**
+
+  L2:
+    description: Technical documentation. Editable with review.
+    policy: editable_with_review
+    files:
+      - docs/**
+      - diagrams/**
+
+  L3:
+    description: Implementation. Editable by AI with team responsibility.
+    policy: editable
+    files:
+      - src/**
+      - tests/**
+      - scripts/**
+      - pipelines/**
+
+guardrails:
+  prevent_direct_l0_modification: true
+  require_adr_for_architecture_change: true
+  require_human_approval_for_paradigm_change: true
+  require_context_review_before_code_generation: true
