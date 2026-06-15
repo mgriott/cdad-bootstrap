@@ -50,7 +50,7 @@ AI agents must not:
 
 Source of truth.
 
-- `cdad/context/vision.md`
+- `cdad/context/solution-vision.md`
 - `cdad/context/architecture.md`
 - `cdad/context/principles.md`
 - `cdad/context/constraints.md`

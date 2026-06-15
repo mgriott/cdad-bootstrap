@@ -4,9 +4,9 @@
 
 This document describes a typical workflow for applying **CDAD — Context-Driven AI Development** in a real project.
 
-## 1. Vision, Architecture, and Constraints → Human-Governed Design
+## 1. Solution Vision, Architecture, and Constraints → Human-Governed Design
 
-The Solution Designer defines the initial vision, architecture, principles, and constraints of the solution.
+The Solution Designer defines the initial solution vision, architecture, principles, and constraints of the solution.
 
 AI agents and ADEs may actively assist during this phase by:
 

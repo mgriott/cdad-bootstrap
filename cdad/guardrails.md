@@ -17,7 +17,7 @@ Required files:
 - `cdad/ai-rules.md`
 - `cdad/governance.md`
 - `cdad/guardrails.md`
-- `cdad/context/vision.md`
+- `cdad/context/solution-vision.md`
 - `cdad/context/architecture.md`
 - `cdad/context/principles.md`
 - `cdad/context/constraints.md`
@@ -26,7 +26,7 @@ Required files:
 
 AI must not directly modify L0 files:
 
-- `cdad/context/vision.md`
+- `cdad/context/solution-vision.md`
 - `cdad/context/architecture.md`
 - `cdad/context/principles.md`
 - `cdad/context/constraints.md`
@@ -98,7 +98,7 @@ AI should implement incrementally.
 
 Each module should remain aligned with:
 
-- Vision
+- Solution Vision
 - Architecture
 - Principles
 - Constraints

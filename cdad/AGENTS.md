@@ -22,7 +22,7 @@ Humans govern context and architecture.
 2. `cdad/ai-rules.md`
 3. `cdad/governance.md`
 4. `cdad/guardrails.md`
-5. `cdad/context/vision.md`
+5. `cdad/context/solution-vision.md`
 6. `cdad/context/architecture.md`
 7. `cdad/context/principles.md`
 8. `cdad/context/constraints.md`
@@ -32,7 +32,7 @@ Humans govern context and architecture.
 
 The following files are classified as **L0 — Foundational Context**:
 
-- `cdad/context/vision.md`
+- `cdad/context/solution-vision.md`
 - `cdad/context/architecture.md`
 - `cdad/context/principles.md`
 - `cdad/context/constraints.md`
@@ -105,4 +105,4 @@ Examples:
 
 Implementation may evolve.
 
-Architecture, principles, constraints, and vision are governed assets and require explicit approval before modification.
+Architecture, principles, constraints, and solution-vision are governed assets and require explicit approval before modification.

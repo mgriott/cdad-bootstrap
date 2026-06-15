@@ -40,7 +40,7 @@ cdad/
 ├── guardrails.md
 │
 ├── context/
-│   ├── vision.md
+│   ├── solution-vision.md
 │   ├── architecture.md
 │   ├── principles.md
 │   ├── constraints.md
@@ -62,7 +62,7 @@ cdad/context/
 
 Specifically:
 
-- `cdad/context/vision.md`
+- `cdad/context/solution-vision.md`
 - `cdad/context/architecture.md`
 - `cdad/context/principles.md`
 - `cdad/context/constraints.md`

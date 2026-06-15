@@ -21,7 +21,7 @@ L0 files are foundational.
 
 AI must not directly edit:
 
-- `cdad/context/vision.md`
+- `cdad/context/solution-vision.md`
 - `cdad/context/architecture.md`
 - `cdad/context/principles.md`
 - `cdad/context/constraints.md`

@@ -16,7 +16,7 @@ The project will use governed context files as the primary source of truth.
 
 Protected L0 context files are:
 
-- `cdad/context/vision.md`
+- `cdad/context/solution-vision.md`
 - `cdad/context/architecture.md`
 - `cdad/context/principles.md`
 - `cdad/context/constraints.md`
