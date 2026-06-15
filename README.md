@@ -104,6 +104,9 @@ while preserving the core principle:
 
 > Context is the Source of Truth.
 
+    CDAD Framework
+    https://github.com/mgriott/context-driven-ai-development
+
 ## License
 
 This work is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
