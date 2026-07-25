@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(/cdad/context/**)",
+      "Write(/cdad/context/**)",
+      "Edit(/cdad/adr/**)",
+      "Write(/cdad/adr/**)",
+      "Edit(/cdad/CHANGE-REQUEST.md)",
+      "Write(/cdad/CHANGE-REQUEST.md)",
+      "Edit(/.claude/settings.json)",
+      "Write(/.claude/settings.json)",
+      "Edit(/.claude/hooks/**)",
+      "Write(/.claude/hooks/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/protect-l0.py"
+          }
+        ]
+      }
+    ]
+  }
+}

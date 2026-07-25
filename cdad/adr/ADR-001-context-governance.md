@@ -1,45 +1,47 @@
-# ADR-001: Adopt CDAD Context Governance
+# ADR-001 — Context is the source of truth
 
-## Status
-
-Accepted
+- Status: Accepted
+- Date: 2026-01-01
+- Approved by: Solution Designer
+- Supersedes: none
 
 ## Context
 
-AI-assisted development can accelerate implementation, but without governed context it may introduce architectural drift, inconsistent patterns, unapproved paradigm changes, and loss of design intent.
+AI agents generate implementation faster than humans review it. Without a
+governed reference, the codebase becomes the de facto specification, and
+architectural intent erodes one reasonable-looking commit at a time. The erosion
+is invisible because every individual change is defensible.
 
 ## Decision
 
-This project adopts **CDAD — Context-Driven AI Development** as the working methodology for AI-assisted development.
+The governed context under `cdad/context/` is the source of truth for this
+project. Generated code is an artifact of that context, never a replacement for
+it. Where code and context disagree, the disagreement is escalated to a human
+rather than resolved by an agent.
 
-The project will use governed context files as the primary source of truth.
+## Alternatives considered
 
-Protected L0 context files are:
-
-- `cdad/context/solution-vision.md`
-- `cdad/context/architecture.md`
-- `cdad/context/principles.md`
-- `cdad/context/constraints.md`
+| Option | Why it lost |
+|---|---|
+| Code as source of truth | Architectural intent is unrecoverable once lost |
+| Prose docs with no enforcement | Ignored under delivery pressure; drifts silently |
+| Review gates only | Catches drift after it is written, not before |
 
 ## Consequences
 
-- AI must read context before implementation.
-- L0 files require human approval before modification.
-- Architecture changes must be proposed before being applied.
-- ADRs must be used for relevant architectural decisions.
-- The Solution Designer owns the context.
-- AI agents, ADEs, and platform engines operate under governed context.
+Makes easy: onboarding agents and humans to architectural intent; detecting
+drift as a discrete event rather than a slow slide.
 
-## Alternatives Considered
+Makes hard: fast unilateral architectural change — deliberately.
 
-- Relying only on prompts.
-- Relying only on generated code.
-- Relying only on informal documentation.
-- Using AI without context governance.
+Locked in: `cdad/context/` is write-protected for agents at the permission and
+hook layers, not merely by instruction.
 
-## Related Files
+## Risks
 
-- `cdad/project-context.md`
-- `cdad/ai-rules.md`
-- `cdad/governance.md`
-- `cdad/guardrails.md`
+The context goes stale and misleads every agent that reads it. Detected by
+running the `cdad-audit` skill on a schedule and before releases.
+
+## Affected context
+
+None — this ADR establishes the model itself.

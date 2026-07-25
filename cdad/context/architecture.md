@@ -1,85 +1,38 @@
 # Architecture
 
-## Current or Intended Architecture
+The current architecture of this solution. Loaded on demand, not at session
+start — so it can be longer than `constraints.md`, but every section should
+still be something an agent would act on.
 
-TODO: Describe the current or intended architecture.
+## Architectural style
 
-Examples:
+<layered / hexagonal / event-driven / microservices / modular monolith>
 
-- Modular Monolith
-- Microservices
-- Event-Driven Architecture
-- Hexagonal Architecture
-- Clean Architecture
-- Layered Architecture
-- Serverless Architecture
+State the style explicitly. Ambiguity here is what produces silent paradigm
+drift.
 
-## Architectural Style
+## Modules and boundaries
 
-TODO: Define the selected architectural style and why it was chosen.
+| Module | Responsibility | May depend on | Must not depend on |
+|---|---|---|---|
 
-## Main Components
+## Integration strategy
 
-TODO: Describe the main components of the system.
+How modules and external systems talk to each other. Protocols, contracts,
+where the boundaries are enforced.
 
-Example:
+## Data model ownership
 
-- API layer
-- Domain layer
-- Application layer
-- Infrastructure layer
-- Database
-- External integrations
-- AI agents
-- Messaging layer
-- Cloud services
-- Infrastructure components
+Which module owns which data. Where the write path is. What is derived.
 
-## Module Boundaries
+## Deployment topology
 
-TODO: Define module boundaries and responsibilities.
+What gets deployed as what, and to where.
 
-## Integration Strategy
+## Known deviations
 
-TODO: Describe how this system integrates with other systems.
+Places where the implementation knowingly diverges from the ideal, and why.
+Recording these prevents an agent from "fixing" a deliberate trade-off.
 
-## Data Strategy
-
-TODO: Describe the main data model, persistence strategy, and data flow.
-
-## Deployment Strategy
-
-TODO: Describe where and how the solution will run.
-
-Examples:
-
-- Local development
-- Cloud
-- Kubernetes
-- Serverless
-- Containers
-- Hybrid
-
-## Cloud and Infrastructure Strategy
-
-TODO: Describe cloud provider, infrastructure approach, IaC strategy, networking, security, and deployment model when applicable.
-
-Examples:
-
-- AWS / Azure / GCP
-- Terraform / Pulumi / Bicep / CloudFormation
-- Kubernetes / serverless / containers
-- CI/CD
-- Observability
-
-## Architecture Decisions
-
-TODO: Link relevant ADRs.
-
-Example:
-
-- `cdad/adr/ADR-001-context-governance.md`
-
-## CDAD Rule
-
-AI must not change the architecture, architectural style, cloud strategy, infrastructure approach, or main design paradigm without creating a Proposed Architecture Change or ADR.
+---
+Governance: L0. Read-only for AI agents. Changes require an approved ADR.

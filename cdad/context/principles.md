@@ -1,54 +1,27 @@
 # Principles
 
-## Technical Principles
+Design principles in force. A principle earns its place only if it rules
+something out. If a principle would never cause you to reject a pull request,
+delete it.
 
-TODO: Define the technical principles that must guide implementation.
+## Format
 
-Examples:
+Each principle: the rule, then the trade-off it accepts.
 
-- Keep architecture explicit.
-- Prefer simplicity.
-- Avoid unnecessary abstraction.
-- Maintain clear boundaries.
-- Preserve domain language.
-- Favor observability.
-- Automate repetitive tasks.
-- Document important decisions.
+- **<Principle>** — <what it rules out>. Accepts: <cost of holding this line>.
 
-## AI-Assisted Development Principles
+## Examples of the right shape
 
-- AI must follow governed context.
-- AI must not override architecture.
-- AI must propose changes before applying architectural decisions.
-- AI must preserve consistency across modules.
-- AI must explain impact when modifying important components.
-- AI must report conflicts between implementation and context.
+- **Boundaries are enforced at compile time, not by convention** — rules out
+  cross-module imports that rely on discipline. Accepts: more ceremony when
+  adding a module.
+- **Failure is explicit in the type signature** — rules out exceptions as
+  control flow. Accepts: more verbose call sites.
 
-## Quality Principles
+## Anti-examples
 
-TODO: Define quality expectations.
+"Write clean code", "prefer simplicity", "follow best practices". These rule
+nothing out and cost context tokens to carry.
 
-Examples:
-
-- Maintainability
-- Testability
-- Security
-- Observability
-- Scalability
-- Reliability
-
-## Cloud and Platform Principles
-
-TODO: Define platform principles when applicable.
-
-Examples:
-
-- Prefer managed services when justified.
-- Use Infrastructure as Code.
-- Keep deployment repeatable.
-- Apply least privilege.
-- Maintain observability from the beginning.
-
-## CDAD Rule
-
-AI must preserve these principles during implementation and must not introduce decisions that contradict them.
+---
+Governance: L0. Read-only for AI agents.

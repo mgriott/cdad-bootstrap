@@ -1,39 +1,22 @@
 # Solution Vision
 
-## Purpose
+## Problem
 
-TODO: Describe the purpose of this solution.
+What is broken today, for whom, and what it costs them.
 
-What problem does this project solve?
+## Users
 
-## Business Goals
+Who uses this and what they are trying to accomplish.
 
-TODO: Define the main business goals.
+## What success looks like
 
-Examples:
+Observable outcomes, not features.
 
-- Reduce operational effort.
-- Improve user experience.
-- Modernize a legacy process.
-- Enable AI-assisted workflows.
-- Increase scalability or maintainability.
+## Non-goals
 
-## Success Criteria
+What this solution deliberately will not become. This section does more work
+than the rest of the file: it is what stops scope creep from being rationalized
+as a natural extension.
 
-TODO: Define how success will be measured.
-
-Examples:
-
-- Delivery time reduced.
-- Fewer manual steps.
-- Improved system reliability.
-- Clearer architecture.
-- Better traceability.
-
-## Out of Scope
-
-TODO: Define what this project should not attempt to solve in the current phase.
-
-## CDAD Rule
-
-AI must preserve the project vision and must not change the purpose of the solution without explicit approval.
+---
+Governance: L0. Read-only for AI agents.

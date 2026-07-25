@@ -1,18 +1,7 @@
 # Glossary
 
-## Project Terms
+Domain terms whose meaning in this project differs from the everyday meaning, or
+that are ambiguous across teams. Do not define general industry terms.
 
-TODO: Define domain and technical terms used in this project.
-
-| Term | Definition |
-|---|---|
-| CDAD | Context-Driven AI Development |
-| ADE | Agentic Development Environment |
-| CPP | Context Protection Pattern |
-| L0 | Foundational protected context |
-| Guardrail | Operational boundary that keeps AI aligned with governed context |
-| ADR | Architecture Decision Record |
-
-## CDAD Rule
-
-AI must use the glossary to preserve consistent language across documentation and implementation.
+| Term | Meaning in this project | Not to be confused with |
+|---|---|---|

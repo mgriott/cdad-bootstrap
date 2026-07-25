@@ -1,67 +1,31 @@
 # Constraints
 
-## Technical Constraints
+Hard limits this solution must respect. This file is loaded into every AI
+session, so keep it short and concrete: only constraints that would change a
+decision. Delete every line you have not actually committed to.
 
-TODO: Define known technical constraints.
+## Platform
 
-Examples:
+- Cloud provider: <locked to X — reason>
+- Compute model: <locked to X — reason>
+- IaC tooling: <X, or "none: infrastructure is provisioned manually">
 
-- Programming language
-- Framework
-- Runtime
-- Database
-- Cloud provider
-- Deployment platform
-- Security requirements
-- Compliance requirements
+## Technical
 
-## Business Constraints
+- Runtime and language version: <X>
+- Datastore: <X — reason>
+- Communication style: <sync REST / async events / both, and where each applies>
 
-TODO: Define business constraints.
+## Regulatory and organizational
 
-Examples:
+- Data residency: <region, reason>
+- Compliance regime: <X>
+- Budget or quota ceilings that constrain design: <X>
 
-- Budget
-- Timeline
-- Operational limitations
-- Existing contracts
-- Legacy dependencies
+## Explicitly out of scope
 
-## Architectural Constraints
+- <thing the solution deliberately does not do>
 
-TODO: Define architectural constraints.
-
-Examples:
-
-- Must remain modular.
-- Must use REST APIs.
-- Must avoid direct database access from UI.
-- Must preserve current domain boundaries.
-- Must not introduce async messaging without approval.
-
-## Cloud and Infrastructure Constraints
-
-TODO: Define cloud and infrastructure constraints.
-
-Examples:
-
-- Must use AWS / Azure / GCP.
-- Must use Terraform.
-- Must deploy to Kubernetes.
-- Must remain serverless.
-- Must not introduce managed services without approval.
-- Must follow security baseline.
-
-## AI Constraints
-
-AI must not:
-
-- Change the project paradigm without approval.
-- Add major dependencies without approval.
-- Replace architectural patterns without approval.
-- Modify L0 context files directly.
-- Replace cloud provider or infrastructure approach without approval.
-
-## CDAD Rule
-
-Constraints are binding. AI may propose changes, but must not silently remove or bypass constraints.
+---
+Governance: L0. Read-only for AI agents. Changes require Solution Designer
+approval via the `cdad-propose-change` skill.
