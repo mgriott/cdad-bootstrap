@@ -98,5 +98,13 @@ the defect v2 was built to remove.
 
 The two path-scoped rule files are the one place duplication is unavoidable,
 since `.claude/rules/` and `.kiro/steering/` use incompatible front matter. They
-are short and change rarely. If you only use one tool, delete the other
-directory rather than maintaining both.
+are short and change rarely.
+
+## If you use only one
+
+Prune the adapters you do not use. See *Delete what you don't use* in the
+README for the exact commands and the two caveats: deleting `.claude/` removes
+the deterministic enforcement layer, and Codex needs nested `AGENTS.md` files to
+approximate path-scoped rules.
+
+`AGENTS.md` is never deleted — it is the core every tool reads.

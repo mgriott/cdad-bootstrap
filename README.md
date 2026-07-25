@@ -214,6 +214,54 @@ write block but loses fine-grained conditional loading.
 
 Details and workarounds: [`docs/cdad/PORTABILITY.md`](docs/cdad/PORTABILITY.md)
 
+### Delete what you don't use
+
+The kit ships with adapters for all three tools. Keeping adapters nobody reads
+is the same duplication defect CDAD v2 was built to remove — the mirrors drift
+apart and you stop trusting either one. **Prune on day one.**
+
+| You use | Keep | Delete |
+|---|---|---|
+| Claude Code only | `AGENTS.md`, `CLAUDE.md`, `.claude/` | `.kiro/` |
+| Kiro only | `AGENTS.md`, `.kiro/` | `CLAUDE.md`, `.claude/` |
+| Codex only | `AGENTS.md` | `CLAUDE.md`, `.claude/`, `.kiro/` |
+| More than one | everything | nothing |
+
+```bash
+# Claude Code only
+rm -rf .kiro
+
+# Kiro only
+rm -rf .claude CLAUDE.md
+
+# Codex only
+rm -rf .claude .kiro CLAUDE.md
+```
+
+**Never delete `AGENTS.md`.** It holds the core rules. Claude Code imports it
+from `CLAUDE.md`; Kiro and Codex read it natively.
+
+Two consequences worth knowing before you prune:
+
+**Deleting `.claude/` removes the enforcement layer.** `settings.json` and
+`hooks/protect-l0.py` are what make L0 protection deterministic rather than
+advisory. On Kiro or Codex you are falling back to `chmod -R a-w cdad/context`
+plus the CI gate — weaker, but still real. Do not skip both.
+
+**On Codex, add nested instruction files.** Codex has no path-scoped rules, so
+recreate the effect by placing scoped `AGENTS.md` files near the code they
+govern, porting the content from `.claude/rules/` before you delete it:
+
+```
+AGENTS.md          # core
+src/AGENTS.md      # implementation rules
+infra/AGENTS.md    # infrastructure rules
+```
+
+Also note that Kiro loads `AGENTS.md` in full on every session — it has no
+inclusion modes. Your core stays small either way, but the startup saving is
+smaller there than on Claude Code.
+
 ---
 
 ## What you maintain

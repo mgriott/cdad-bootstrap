@@ -14,6 +14,7 @@ context. If you read one file to orient yourself, read this one.
 | Understand why CDAD works this way | `docs/cdad/METHODOLOGY.md` |
 | Set this up in my project | `README.md` |
 | Run it on Kiro or Codex | `docs/cdad/PORTABILITY.md` |
+| Delete the adapters I don't use | `README.md` → *Delete what you don't use* |
 
 ---
 
