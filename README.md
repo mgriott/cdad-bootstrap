@@ -96,7 +96,7 @@ Four mechanisms, weakest to strongest:
 | `AGENTS.md` | States the rule: an ADR that doesn't declare its effect on the map is incomplete |
 | Skill `cdad-adr` | Requires a before/after stack delta plus a change log row |
 | Skill `cdad-audit` | Verifies each view against manifests, the real import graph, and alert rules |
-| `scripts/cdad-check-stack.sh` | **Fails the build** when an ADR changes and the map does not |
+| `cdad/scripts/cdad-check-stack.sh` | **Fails the build** when an ADR changes and the map does not |
 
 The first three are instructions — a model can fall short. The fourth is
 deterministic.
@@ -110,7 +110,7 @@ Put each concern in the plane that can enforce it.
 | Plane | Mechanism | Guarantee | Context cost |
 |---|---|---|---|
 | Control | `permissions.deny` + PreToolUse hook | Deterministic | Zero |
-| Build | CI gate in `scripts/` | Deterministic, at merge | Zero |
+| Build | CI gate in `cdad/scripts/` | Deterministic, at merge | Zero |
 | Instruction | `AGENTS.md`, `.claude/rules/` | Probabilistic | Tokens |
 | Procedural | `.claude/skills/` | On demand | Zero until invoked |
 
@@ -134,7 +134,6 @@ constraints — roughly 85 lines, not the whole knowledge base.
 ```
 INDEX.md                        # map of every file — start here
 AGENTS.md                       # portable core rules — Kiro & Codex read this natively
-CLAUDE.md                       # imports AGENTS.md + Claude Code specifics
 │
 cdad/
 ├── CHANGE-REQUEST.md           # ← the front door: you write intent here
@@ -144,23 +143,45 @@ cdad/
 │   ├── architecture.md
 │   ├── solution-vision.md
 │   ├── principles.md
-│   ├── constraints.md          #   always in context, imported by CLAUDE.md
+│   ├── constraints.md          #   always in context, imported by .claude/CLAUDE.md
 │   └── glossary.md
-└── adr/                        # L1 — accepted decisions
+├── adr/                        # L1 — accepted decisions
+├── scripts/cdad-check-stack.sh # CI gate
+└── docs/                       # human reference, never loaded by agents
+    ├── METHODOLOGY.md
+    ├── PORTABILITY.md
+    └── MIGRATION.md
 │
 .claude/
+├── CLAUDE.md                   # imports AGENTS.md + Claude Code specifics
 ├── settings.json               # write protection for governed paths
 ├── hooks/protect-l0.py         # same block via shell too — exit 2
 ├── rules/                      # path-scoped: load only for matching files
 └── skills/                     # cdad-propose-change, cdad-adr, cdad-audit
 │
 .kiro/steering/                 # Kiro mirrors of the path-scoped rules
-scripts/cdad-check-stack.sh     # CI gate
-docs/cdad/                      # human reference, never loaded by agents
-├── METHODOLOGY.md
-├── PORTABILITY.md
-└── MIGRATION.md
 ```
+
+### Why `.claude/` and `.kiro/` stay at the root
+
+Everything that is not a tool's fixed entry point lives under `cdad/`. `.claude/`
+and `.kiro/` are the exception, and it is not a style choice — it is how these
+tools discover their configuration.
+
+Claude Code loads `./CLAUDE.md` or `./.claude/CLAUDE.md` (plus ancestor
+directories above the cwd) at session start. It does not walk into arbitrary
+subdirectories looking for one. Nest `.claude/` a level deeper — say, inside
+`cdad/.claude/` — and Claude Code simply never loads it. There is no error, no
+warning: the rules and skills are silently absent from every session.
+
+Kiro works the same way with `.kiro/steering/`: it is discovered at a fixed
+location relative to the project root, not searched for. Move it under `cdad/`
+and Kiro stops finding it, again without telling you.
+
+`AGENTS.md` stays at the root for the identical reason — it is the file Kiro
+and Codex read natively by convention. Only content that no tool discovers by
+fixed path — docs, the CI script, `CLAUDE.md` itself once redirected through
+`.claude/CLAUDE.md` — is free to move into `cdad/`.
 
 ---
 
@@ -177,8 +198,11 @@ docs/cdad/                      # human reference, never loaded by agents
 
 ## Getting started
 
-1. Copy `INDEX.md`, `AGENTS.md`, `CLAUDE.md`, `.claude/`, `cdad/`, `scripts/`,
-   and `docs/` into your project root.
+1. Copy `INDEX.md`, `AGENTS.md`, `.claude/` (includes `.claude/CLAUDE.md`),
+   `cdad/` (includes `cdad/docs/` and `cdad/scripts/`), and `.kiro/` if you use
+   Kiro into your project root. Do not recreate `CLAUDE.md`, `docs/`, or
+   `scripts/` as separate top-level folders — those live inside `.claude/` and
+   `cdad/` now.
 2. Fill in `cdad/context/stack.md` first. It forces the decisions the other
    files describe in prose. Leave a cell empty rather than guessing — an empty
    cell is a decision not yet made, and saying so is the point.
@@ -186,15 +210,15 @@ docs/cdad/                      # human reference, never loaded by agents
    only one loaded on every session.
 4. Adjust the `paths:` globs in `.claude/rules/` to your folder layout. They
    ship with `src/`, `tests/`, `infra/`, `deploy/`.
-5. Wire `scripts/cdad-check-stack.sh` into CI against your default branch.
-6. Run a session, then `/context`. Only `CLAUDE.md`, `AGENTS.md`, and
+5. Wire `cdad/scripts/cdad-check-stack.sh` into CI against your default branch.
+6. Run a session, then `/context`. Only `.claude/CLAUDE.md`, `AGENTS.md`, and
    `constraints.md` should be loaded.
 7. **Verify the guardrail is real:** ask the agent to edit
    `cdad/context/stack.md`. It must be *blocked*, not merely reluctant. If it
    only hesitates, the enforcement layer is not loading.
 
 Full file map: [`INDEX.md`](INDEX.md) · Upgrading from v1:
-[`docs/cdad/MIGRATION.md`](docs/cdad/MIGRATION.md)
+[`cdad/docs/MIGRATION.md`](cdad/docs/MIGRATION.md)
 
 ---
 
@@ -212,7 +236,7 @@ Claude Code runs everything. Kiro runs everything except the declarative write
 block — fall back to `chmod -R a-w cdad/context` or the CI gate. Codex keeps the
 write block but loses fine-grained conditional loading.
 
-Details and workarounds: [`docs/cdad/PORTABILITY.md`](docs/cdad/PORTABILITY.md)
+Details and workarounds: [`cdad/docs/PORTABILITY.md`](cdad/docs/PORTABILITY.md)
 
 ### Delete what you don't use
 
@@ -222,9 +246,9 @@ apart and you stop trusting either one. **Prune on day one.**
 
 | You use | Keep | Delete |
 |---|---|---|
-| Claude Code only | `AGENTS.md`, `CLAUDE.md`, `.claude/` | `.kiro/` |
-| Kiro only | `AGENTS.md`, `.kiro/` | `CLAUDE.md`, `.claude/` |
-| Codex only | `AGENTS.md` | `CLAUDE.md`, `.claude/`, `.kiro/` |
+| Claude Code only | `AGENTS.md`, `.claude/` (incl. `.claude/CLAUDE.md`) | `.kiro/` |
+| Kiro only | `AGENTS.md`, `.kiro/` | `.claude/` |
+| Codex only | `AGENTS.md` | `.claude/`, `.kiro/` |
 | More than one | everything | nothing |
 
 ```bash
@@ -232,14 +256,14 @@ apart and you stop trusting either one. **Prune on day one.**
 rm -rf .kiro
 
 # Kiro only
-rm -rf .claude CLAUDE.md
+rm -rf .claude
 
 # Codex only
-rm -rf .claude .kiro CLAUDE.md
+rm -rf .claude .kiro
 ```
 
 **Never delete `AGENTS.md`.** It holds the core rules. Claude Code imports it
-from `CLAUDE.md`; Kiro and Codex read it natively.
+from `.claude/CLAUDE.md`; Kiro and Codex read it natively.
 
 Two consequences worth knowing before you prune:
 
@@ -267,7 +291,7 @@ smaller there than on Claude Code.
 ## What you maintain
 
 Only `cdad/context/` and `cdad/adr/`. Everything under `.claude/`, `.kiro/`, and
-`scripts/` is CDAD runtime and rarely needs changes beyond the path globs.
+`cdad/scripts/` is CDAD runtime and rarely needs changes beyond the path globs.
 
 ---
 

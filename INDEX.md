@@ -11,9 +11,9 @@ context. If you read one file to orient yourself, read this one.
 |---|---|
 | Change the stack, architecture, or any directive | `cdad/CHANGE-REQUEST.md` |
 | See what this system is, in one screen | `cdad/context/stack.md` |
-| Understand why CDAD works this way | `docs/cdad/METHODOLOGY.md` |
+| Understand why CDAD works this way | `cdad/docs/METHODOLOGY.md` |
 | Set this up in my project | `README.md` |
-| Run it on Kiro or Codex | `docs/cdad/PORTABILITY.md` |
+| Run it on Kiro or Codex | `cdad/docs/PORTABILITY.md` |
 | Delete the adapters I don't use | `README.md` → *Delete what you don't use* |
 
 ---
@@ -43,7 +43,7 @@ context. If you read one file to orient yourself, read this one.
 | File | Contains | Loads |
 |---|---|---|
 | `AGENTS.md` | Portable core rules. Read natively by Kiro and Codex | **always** |
-| `CLAUDE.md` | Imports `AGENTS.md`, adds skill routing | **always** |
+| `.claude/CLAUDE.md` | Imports `AGENTS.md`, adds skill routing | **always** |
 | `.claude/rules/implementation.md` | Rules for `src/`, `tests/`, `lib/` | on matching files |
 | `.claude/rules/infrastructure.md` | Rules for `infra/`, `deploy/`, CI | on matching files |
 | `.kiro/steering/cdad-implementation.md` | Kiro mirror of the above | on matching files |
@@ -63,7 +63,7 @@ context. If you read one file to orient yourself, read this one.
 |---|---|
 | `.claude/settings.json` | Denies writes to governed paths |
 | `.claude/hooks/protect-l0.py` | Blocks the same paths via shell too. Exit 2 |
-| `scripts/cdad-check-stack.sh` | CI gate: an ADR without a map update fails the build |
+| `cdad/scripts/cdad-check-stack.sh` | CI gate: an ADR without a map update fails the build |
 
 ## Human documentation — never loaded by any agent
 
@@ -71,9 +71,9 @@ context. If you read one file to orient yourself, read this one.
 |---|---|
 | `INDEX.md` | This file |
 | `README.md` | What CDAD is, setup, tool support |
-| `docs/cdad/METHODOLOGY.md` | Governance model, layers, enforcement planes |
-| `docs/cdad/PORTABILITY.md` | Claude Code vs Kiro vs Codex |
-| `docs/cdad/MIGRATION.md` | Upgrading from CDAD v1 |
+| `cdad/docs/METHODOLOGY.md` | Governance model, layers, enforcement planes |
+| `cdad/docs/PORTABILITY.md` | Claude Code vs Kiro vs Codex |
+| `cdad/docs/MIGRATION.md` | Upgrading from CDAD v1 |
 
 ---
 
@@ -94,7 +94,7 @@ skip.
 
 Only these. Everything else is on demand or never.
 
-- `CLAUDE.md` (or `AGENTS.md` on Kiro and Codex)
+- `.claude/CLAUDE.md` (or `AGENTS.md` on Kiro and Codex)
 - `AGENTS.md`
 - `cdad/context/constraints.md`
 

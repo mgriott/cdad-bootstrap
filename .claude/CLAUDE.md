@@ -1,4 +1,4 @@
-@AGENTS.md
+@../AGENTS.md
 
 ## Claude Code specifics
 
@@ -18,4 +18,4 @@ to reach a blocked path.
 
 Hard constraints, always in context:
 
-@cdad/context/constraints.md
+@../cdad/context/constraints.md

@@ -10,14 +10,14 @@ Nothing in `cdad/` needs to change to move between tools. Only the adapter does.
 
 | Capability | Claude Code | Kiro | Codex |
 |---|---|---|---|
-| Always-loaded instructions | `CLAUDE.md` | `AGENTS.md`, or steering `inclusion: always` | `AGENTS.md` |
+| Always-loaded instructions | `.claude/CLAUDE.md` | `AGENTS.md`, or steering `inclusion: always` | `AGENTS.md` |
 | Reads `AGENTS.md` natively | no — imports it | yes | yes |
 | Path-scoped rules | `.claude/rules/` + `paths:` | `.kiro/steering/` + `inclusion: fileMatch` | nested `AGENTS.md` only |
 | On-demand procedures | Skills | steering `inclusion: manual` / `auto` | prompt or custom command |
 | Declarative file-write blocking | `permissions.deny` | not equivalent | `[permissions.*.filesystem]` globs |
 | Programmatic pre-tool block | PreToolUse hook | agent hooks (different model) | hooks / sandbox |
 | Governed context in `cdad/` | works | works | works |
-| CI gate (`scripts/`) | works | works | works |
+| CI gate (`cdad/scripts/`) | works | works | works |
 
 **Short version:** Claude Code runs everything. Kiro runs everything except the
 deterministic write block, which it approximates. Codex runs the content and the
@@ -26,11 +26,12 @@ all-or-nothing.
 
 ## Claude Code
 
-Native target. `CLAUDE.md` imports `AGENTS.md` and adds the Claude-specific
-layer: skill routing and a note that permission denials are by design.
+Native target. `.claude/CLAUDE.md` imports `AGENTS.md` and adds the
+Claude-specific layer: skill routing and a note that permission denials are by
+design.
 
-Verify with `/context`: only `CLAUDE.md`, `AGENTS.md`, and `constraints.md`
-should appear under memory files.
+Verify with `/context`: only `.claude/CLAUDE.md`, `AGENTS.md`, and
+`constraints.md` should appear under memory files.
 
 ## Kiro
 
@@ -47,7 +48,7 @@ protection degrades to instruction only. Two workarounds, in order of strength:
 
 1. Make `cdad/context/` read-only on disk: `chmod -R a-w cdad/context`. Crude,
    tool-independent, and effective — the write fails at the filesystem.
-2. Rely on the CI gate. `scripts/cdad-check-stack.sh` plus a branch rule
+2. Rely on the CI gate. `cdad/scripts/cdad-check-stack.sh` plus a branch rule
    requiring review on `cdad/**` catches what reaches a pull request.
 
 Known issue: global steering in `~/.kiro/steering/` has had reports of
@@ -93,8 +94,8 @@ quickly.
 ## If you use all three
 
 Keep `AGENTS.md` as the single source for the core rules. Never restate a rule
-in `CLAUDE.md` that already lives in `AGENTS.md` — that duplication is exactly
-the defect v2 was built to remove.
+in `.claude/CLAUDE.md` that already lives in `AGENTS.md` — that duplication is
+exactly the defect v2 was built to remove.
 
 The two path-scoped rule files are the one place duplication is unavoidable,
 since `.claude/rules/` and `.kiro/steering/` use incompatible front matter. They

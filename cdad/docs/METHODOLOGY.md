@@ -38,7 +38,7 @@ putting each concern in the plane that can actually enforce it.
 | Plane | Mechanism | Guarantee | Cost per session |
 |---|---|---|---|
 | Control | `permissions.deny`, PreToolUse hook | Deterministic | Zero context |
-| Build | `scripts/cdad-check-stack.sh` in CI | Deterministic, after the fact | Zero context |
+| Build | `cdad/scripts/cdad-check-stack.sh` in CI | Deterministic, after the fact | Zero context |
 | Instruction | `AGENTS.md`, `.claude/rules/` | Probabilistic | Tokens |
 | Procedural | `.claude/skills/` | On demand | Zero until invoked |
 
@@ -56,8 +56,8 @@ abstraction is warranted. No permission rule can decide those.
 
 | Concern | Location | Loads |
 |---|---|---|
-| Non-negotiable behavioral rules | `AGENTS.md`, imported by `CLAUDE.md` | always |
-| Hard project constraints | `cdad/context/constraints.md`, imported by `CLAUDE.md` | always |
+| Non-negotiable behavioral rules | `AGENTS.md`, imported by `.claude/CLAUDE.md` | always |
+| Hard project constraints | `cdad/context/constraints.md`, imported by `.claude/CLAUDE.md` | always |
 | Rules for one area of the codebase | `.claude/rules/*.md` with `paths:` | when touching matching files |
 | Proposal, ADR, audit procedures | `.claude/skills/*/SKILL.md` | when invoked |
 | The stack and architecture map | `cdad/context/stack.md` | when the task needs it |
@@ -65,7 +65,7 @@ abstraction is warranted. No permission rule can decide those.
 | Accepted decisions | `cdad/adr/` | when the task needs them |
 | Change requests | `cdad/CHANGE-REQUEST.md` | never |
 | Agent drafts awaiting review | `cdad/proposals/` | never |
-| This document | `docs/cdad/` | never |
+| This document | `cdad/docs/` | never |
 
 ## The change flow
 
@@ -113,7 +113,7 @@ keep licensed.
 It is governed at L0 and updated in the same change as the ADR that approves the
 architectural decision. Three mechanisms hold that line, in descending strength:
 
-1. **CI gate** — `scripts/cdad-check-stack.sh` fails the build when an ADR
+1. **CI gate** — `cdad/scripts/cdad-check-stack.sh` fails the build when an ADR
    changes and the map does not.
 2. **ADR procedure** — the `cdad-adr` skill requires a stack map delta section
    with before/after rows; an ADR without one is incomplete.

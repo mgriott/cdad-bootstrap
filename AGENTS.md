@@ -57,7 +57,7 @@ Read these only when the task requires them — never all of them at session sta
 - `cdad/context/solution-vision.md` — what the solution is for, and its non-goals
 - `cdad/context/principles.md` — design principles in force
 - `cdad/adr/` — accepted decisions and their rationale
-- `docs/cdad/METHODOLOGY.md` — the CDAD model itself (human reference)
+- `cdad/docs/METHODOLOGY.md` — the CDAD model itself (human reference)
 
 Start with `stack.md`. It is the densest view and usually the only one needed.
 
