@@ -11,6 +11,42 @@ context for AI-assisted software development.
 
 ---
 
+## Usage flow
+
+### 1. Define the solution first
+
+Before using CDAD, you need a document with the full scope of the project and
+the main decisions already worked out — finished, not a draft: idea, goal,
+vision, requirements, proposed architecture, tech stack, constraints, and
+development rules.
+
+It can be a `.md`, `.txt`, Word, PDF, or documentation you already have.
+Ideally, this definition has already been reviewed and discussed with an LLM
+to catch inconsistencies and improve the design.
+
+**How do you implement CDAD with that?**
+
+You hand it to your IDE agent — you tell it to pull down CDAD Bootstrap and
+set it up in the project using that document as the source. The agent (Kiro,
+Codex, Cursor, Claude Code, or whichever ADE you use):
+
+→ clones/downloads CDAD Bootstrap into the project
+→ reads and analyzes your solution document
+→ generates the governed context structure
+→ creates/organizes the necessary CDAD files
+→ writes your defined vision, architecture, principles, constraints, and
+stack into them
+→ prepares the initial workspace/scaffolding needed to start development
+
+From that point on, the agent reads that governed context first, before
+making any implementation decision.
+
+The idea is simple: first you define what you want to build and how it
+should be; then the agent sets up CDAD's governed context from that
+definition; finally the AI develops under that context.
+
+---
+
 ## The problem
 
 AI accelerates implementation. Humans govern context and architecture.
