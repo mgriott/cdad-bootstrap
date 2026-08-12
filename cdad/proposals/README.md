@@ -9,9 +9,10 @@ artifact without ever touching `cdad/context/` or `cdad/adr/`.
 ## Flow
 
 ```
-cdad/CHANGE-REQUEST.md   →   cdad/proposals/   →   cdad/adr/ + cdad/context/
-   you write intent          agent drafts          you apply, after approval
-   (always writable)         (agent writable)      (blocked for agents)
+CHANGE-REQUEST.md   →   cdad/proposals/   →   cdad/adr/ + cdad/context/
+(project root)
+   you write intent     agent drafts          you apply, after approval
+   (always writable)    (agent writable)      (blocked for agents)
 ```
 
 ## Lifecycle
@@ -19,7 +20,8 @@ cdad/CHANGE-REQUEST.md   →   cdad/proposals/   →   cdad/adr/ + cdad/context/
 | State | Meaning |
 |---|---|
 | `PROPOSAL-<slug>.md` | awaiting your review |
-| deleted | rejected, or promoted to an ADR |
+| `bootstrap/` | the `cdad-bootstrap` skill's one-time draft of all six `cdad/context/` files, plus `SOURCE-BRIEF.*` if a source document existed — the one case where a batch of files lands here instead of a single proposal |
+| deleted | rejected, or promoted to an ADR / applied to context |
 
 Delete proposals once resolved. A directory full of stale drafts is the same
 failure as stale context: it makes the current state ambiguous.

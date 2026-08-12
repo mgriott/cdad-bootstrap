@@ -9,11 +9,12 @@ context. If you read one file to orient yourself, read this one.
 
 | I want to... | Go to |
 |---|---|
-| Change the stack, architecture, or any directive | `cdad/CHANGE-REQUEST.md` |
+| Populate CDAD for the first time in this project | drop your solution doc at the project root, any name (optional), then run the `cdad-bootstrap` skill |
+| Change the stack, architecture, or any directive | `CHANGE-REQUEST.md`, at the project root |
 | See what this system is, in one screen | `cdad/context/stack.md` |
-| Understand why CDAD works this way | `cdad/docs/METHODOLOGY.md` |
+| Understand why CDAD works this way | `cdad/docs/DOCS.md` (Methodology) |
 | Set this up in my project | `README.md` |
-| Run it on Kiro or Codex | `cdad/docs/PORTABILITY.md` |
+| Run it on Kiro or Codex | `cdad/docs/DOCS.md` (Portability) |
 | Delete the adapters I don't use | `README.md` → *Delete what you don't use* |
 
 ---
@@ -22,7 +23,8 @@ context. If you read one file to orient yourself, read this one.
 
 | File | Layer | Contains | Loads |
 |---|---|---|---|
-| `cdad/CHANGE-REQUEST.md` | — | Your standing request desk. The only input door | never |
+| `CHANGE-REQUEST.md` (project root) | — | Your standing request desk. The only input door | never |
+| `SOURCE-BRIEF.*` (project root) | — | Your original design document, if one existed. Written once by `cdad-bootstrap`, then locked — not present if the context came entirely from conversation | never |
 | `cdad/context/stack.md` | L0 | **The map**: stack table, components, topology, observability, dependency rules, change log | on demand |
 | `cdad/context/architecture.md` | L0 | Architecture in prose, module responsibilities | on demand |
 | `cdad/context/constraints.md` | L0 | Hard limits. Kept short because it is always loaded | **always** |
@@ -53,6 +55,7 @@ context. If you read one file to orient yourself, read this one.
 
 | File | Invoked when |
 |---|---|
+| `.claude/skills/cdad-bootstrap/SKILL.md` | first time populating `cdad/context/`, right after cloning the kit |
 | `.claude/skills/cdad-propose-change/SKILL.md` | processing a change request, or a change is needed |
 | `.claude/skills/cdad-adr/SKILL.md` | a change was approved and needs recording |
 | `.claude/skills/cdad-audit/SKILL.md` | checking whether context still matches the code |
@@ -71,18 +74,16 @@ context. If you read one file to orient yourself, read this one.
 |---|---|
 | `INDEX.md` | This file |
 | `README.md` | What CDAD is, setup, tool support |
-| `cdad/docs/METHODOLOGY.md` | Governance model, layers, enforcement planes |
-| `cdad/docs/PORTABILITY.md` | Claude Code vs Kiro vs Codex |
-| `cdad/docs/MIGRATION.md` | Upgrading from CDAD v1 |
+| `cdad/docs/DOCS.md` | Governance model, layers, enforcement planes, Claude Code vs Kiro vs Codex, upgrading from CDAD v1 |
 
 ---
 
 ## The one flow that matters
 
 ```
-cdad/CHANGE-REQUEST.md  ->  cdad/proposals/  ->  cdad/adr/ + cdad/context/stack.md
-     you state intent         agent drafts           you approve and apply
-     always writable          agent writable         blocked for agents
+CHANGE-REQUEST.md  ->  cdad/proposals/  ->  cdad/adr/ + cdad/context/stack.md
+     you state intent      agent drafts           you approve and apply
+     always writable       agent writable         blocked for agents
 ```
 
 Everything else in this kit exists to make that flow cheap to run and hard to

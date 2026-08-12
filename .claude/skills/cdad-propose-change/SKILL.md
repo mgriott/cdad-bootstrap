@@ -1,6 +1,6 @@
 ---
 name: cdad-propose-change
-description: Produce a CDAD change proposal instead of applying a change directly. Use when the user says to process the change request, when an architectural change is required, when a governed context file under cdad/context/ is wrong or outdated, or when implementation code conflicts with the governed context. Triggers on any request to change architecture, paradigm, module boundaries, frameworks, cloud services, or infrastructure tooling, and whenever a permission denial points at cdad/context/, cdad/adr/, or cdad/CHANGE-REQUEST.md.
+description: Produce a CDAD change proposal instead of applying a change directly. Use when the user says to process the change request, when an architectural change is required, when a governed context file under cdad/context/ is wrong or outdated, or when implementation code conflicts with the governed context. Triggers on any request to change architecture, paradigm, module boundaries, frameworks, cloud services, or infrastructure tooling, and whenever a permission denial points at cdad/context/, cdad/adr/, or CHANGE-REQUEST.md.
 ---
 
 # CDAD change proposal
@@ -11,9 +11,15 @@ not create the ADR yourself.
 
 ## Where the request comes from
 
-If the user says "process the change request", read `cdad/CHANGE-REQUEST.md`
-first. It holds the Solution Designer's stated intent. If the request block is
-empty or unchanged from the template, say so and stop — do not invent one.
+If the user says "process the change request", read `CHANGE-REQUEST.md`, at
+the project root, first. It holds the Solution Designer's stated intent. If
+the request block is empty or unchanged from the template, say so and stop —
+do not invent one.
+
+"What I want to change" may be a tight one-liner or a raw paragraph pasted
+straight from the Solution Designer's own document — both are valid input, not
+just the former. Read a pasted excerpt for what it actually decides; do not ask
+them to compress it into bullets first.
 
 Otherwise the request is whatever the user just described.
 
@@ -22,7 +28,7 @@ Otherwise the request is whatever the user just described.
 Write the proposal to `cdad/proposals/PROPOSAL-<short-kebab-summary>.md`. That
 directory is the only place under `cdad/` you may write.
 
-Do not edit `cdad/CHANGE-REQUEST.md` — not to clear it, not to mark it
+Do not edit `CHANGE-REQUEST.md` — not to clear it, not to mark it
 processed, not to tidy it. It is the Solution Designer's desk.
 
 ## Before writing

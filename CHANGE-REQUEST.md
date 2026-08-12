@@ -15,6 +15,9 @@ history lives in `cdad/adr/`.
 ## Request
 
 **What I want to change:**
+<!-- A line or two is enough. Or paste the updated paragraph/section from your
+     design document as-is if that's easier — you don't need to compress it
+     into your own words first. Either way works. -->
 
 
 **Why:**
@@ -32,7 +35,8 @@ history lives in `cdad/adr/`.
 
 ## How to use this
 
-1. Fill in the block above. Four lines is enough.
+1. Fill in the block above. Four lines is enough — or paste the relevant
+   updated section straight from your document if you'd rather not rewrite it.
 2. Tell your agent: *"process the change request"*.
 3. The agent reads this file plus the governed context, and writes a full
    proposal to `cdad/proposals/`. It does not touch `cdad/context/` or

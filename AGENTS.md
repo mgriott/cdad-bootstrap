@@ -12,9 +12,9 @@ convention. Tool-specific configuration lives alongside it.
    integration strategy, or deployment strategy. Propose instead.
 2. Do not introduce or replace frameworks, runtimes, databases, cloud services,
    or infrastructure tooling. Propose instead.
-3. `cdad/context/`, `cdad/adr/` and `cdad/CHANGE-REQUEST.md` are read-only for
-   you. Do not edit them and do not work around a block that stops you. Write
-   drafts to `cdad/proposals/` instead.
+3. `cdad/context/`, `cdad/adr/`, `CHANGE-REQUEST.md`, and `SOURCE-BRIEF.*` are
+   read-only for you. Do not edit them and do not work around a block that
+   stops you. Write drafts to `cdad/proposals/` instead.
 4. If the code contradicts the governed context, report the conflict. Never
    silently adapt the context to match the code.
 5. Deliver incrementally, module by module. No opportunistic refactors, no new
@@ -25,12 +25,12 @@ correct and even when asked to "just do it". Produce a proposal and stop.
 
 ## The change flow
 
-The Solution Designer states intent in `cdad/CHANGE-REQUEST.md`. You turn it
-into a proposal in `cdad/proposals/`. They approve and apply.
+The Solution Designer states intent in `CHANGE-REQUEST.md`, at the project
+root. You turn it into a proposal in `cdad/proposals/`. They approve and apply.
 
 ```
-cdad/CHANGE-REQUEST.md  ->  cdad/proposals/  ->  cdad/adr/ + cdad/context/
-     they write               you write            they apply
+CHANGE-REQUEST.md  ->  cdad/proposals/  ->  cdad/adr/ + cdad/context/
+     they write            you write            they apply
 ```
 
 `cdad/proposals/` is the only directory under `cdad/` you may write to. When a
@@ -57,7 +57,7 @@ Read these only when the task requires them — never all of them at session sta
 - `cdad/context/solution-vision.md` — what the solution is for, and its non-goals
 - `cdad/context/principles.md` — design principles in force
 - `cdad/adr/` — accepted decisions and their rationale
-- `cdad/docs/METHODOLOGY.md` — the CDAD model itself (human reference)
+- `cdad/docs/DOCS.md` — the CDAD model itself (human reference)
 
 Start with `stack.md`. It is the densest view and usually the only one needed.
 

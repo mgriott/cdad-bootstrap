@@ -13,37 +13,51 @@ context for AI-assisted software development.
 
 ## Usage flow
 
-### 1. Define the solution first
+### 1. Bootstrap the governed context
 
-Before using CDAD, you need a document with the full scope of the project and
-the main decisions already worked out — finished, not a draft: idea, goal,
-vision, requirements, proposed architecture, tech stack, constraints, and
-development rules.
+**Step 1: leave your design document at the project root, if you have one.**
+Any name, any common format — `.md`, `.txt`, Word, PDF. No convention to
+follow, just drop the file there. It should be finished, not a draft: idea,
+goal, vision, requirements, proposed architecture, tech stack, constraints,
+and development rules — ideally already reviewed and discussed with an LLM to
+catch inconsistencies. Don't have one yet? Skip this step; the agent will
+define the context with you through conversation instead.
 
-It can be a `.md`, `.txt`, Word, PDF, or documentation you already have.
-Ideally, this definition has already been reviewed and discussed with an LLM
-to catch inconsistencies and improve the design.
-
-**How do you implement CDAD with that?**
-
-You hand it to your IDE agent — you tell it to pull down CDAD Bootstrap and
-set it up in the project using that document as the source. The agent (Kiro,
-Codex, Cursor, Claude Code, or whichever ADE you use):
+**Step 2: tell your IDE agent to pull down CDAD Bootstrap and set it up** (say
+*"clone CDAD Bootstrap and bootstrap the project"* — the agent runs the
+`cdad-bootstrap` skill). The agent (Kiro, Codex, Cursor, Claude Code, or
+whichever ADE you use):
 
 → clones/downloads CDAD Bootstrap into the project
-→ reads and analyzes your solution document
-→ generates the governed context structure
-→ creates/organizes the necessary CDAD files
-→ writes your defined vision, architecture, principles, constraints, and
-stack into them
-→ prepares the initial workspace/scaffolding needed to start development
+→ checks whether `cdad/context/` is still template placeholders
+→ checks the root for the document you left in step 1; if there's none, or
+more than one, asks instead of guessing
+→ if a document exists, asks you to confirm it's finished — not a draft —
+before touching it; if you say it isn't, it stops and waits for you to finish
+it instead of asking around the gaps
+→ once confirmed (or if there was never a document to confirm), reads it and
+maps it onto the six context files
+→ asks you directly for whatever it still doesn't answer — the less there was
+to start with, the more it asks, and that's expected
+→ summarizes the result and waits for your explicit confirmation — a second,
+separate confirmation from the one above: that one was about your design being
+settled, this one is about whether the six files actually capture it
+→ only then drafts the completed context files — plus your source document,
+renamed `SOURCE-BRIEF.*`, if you had one — to `cdad/proposals/bootstrap/`, and
+hands you the commands to apply them, so it ends up permanently at the
+project root, not tucked away
+
+The agent never writes `cdad/context/` itself, not even on the very first run —
+`cdad-bootstrap` goes through the same propose-then-you-apply flow as every
+other change to governed context. See `.claude/skills/cdad-bootstrap/SKILL.md`
+for the full procedure.
 
 From that point on, the agent reads that governed context first, before
 making any implementation decision.
 
-The idea is simple: first you define what you want to build and how it
-should be; then the agent sets up CDAD's governed context from that
-definition; finally the AI develops under that context.
+The idea is simple: you and the agent work out what you want to build and how
+it should be, confirmed by you; then CDAD's governed context is populated from
+that; finally the AI develops under that context.
 
 ---
 
@@ -63,14 +77,19 @@ makes changing it a deliberate act instead of a side effect.
 
 ---
 
-## Two files you will actually use
+## Two files you will always touch
 
-Everything else in this kit is machinery.
+Everything else in this kit is machinery. These two live at the project root,
+not inside `cdad/` — you should never have to go looking for them.
 
-| File | What it is |
-|---|---|
-| **`cdad/context/stack.md`** | The map. What this system *is*, in one screen |
-| **`cdad/CHANGE-REQUEST.md`** | The front door. Where you ask for anything to change |
+| File | What it is | When you touch it |
+|---|---|---|
+| **`SOURCE-BRIEF.*`** | Your original design — vision, architecture, stack, constraints, in your own words | Once, before or during setup |
+| **`CHANGE-REQUEST.md`** | The front door. Where you ask for anything to change | Whenever a decision needs to change |
+
+`cdad/context/stack.md` is the file you'll *read* the most — the one-screen
+map of what this system is — but it's an output, not something you write by
+hand. Approved changes reach it through `CHANGE-REQUEST.md`, never directly.
 
 ---
 
@@ -102,15 +121,16 @@ finding: a decision that entered the system without passing through governance.
 One entry point. You never hunt for the right file.
 
 ```
-cdad/CHANGE-REQUEST.md  ->  cdad/proposals/  ->  cdad/adr/ + cdad/context/stack.md
-     you state intent         agent drafts           you approve and apply
-     always writable          agent writable         blocked for agents
+CHANGE-REQUEST.md  ->  cdad/proposals/  ->  cdad/adr/ + cdad/context/stack.md
+     you state intent      agent drafts           you approve and apply
+     always writable       agent writable         blocked for agents
 ```
 
-Write four lines in `cdad/CHANGE-REQUEST.md` — what, why, what triggered it, how
-urgent. Say *"process the change request"*. The agent returns a complete
-proposal: current decision, suggested change, impact, risk, alternatives, and
-the exact stack map rows that change. You approve; it drafts the ADR; you apply.
+Write four lines in `CHANGE-REQUEST.md`, at the project root — what, why, what
+triggered it, how urgent. Say *"process the change request"*. The agent
+returns a complete proposal: current decision, suggested change, impact, risk,
+alternatives, and the exact stack map rows that change. You approve; it drafts
+the ADR; you apply.
 
 **`cdad/proposals/` is the only directory under `cdad/` an agent may write to.**
 That single asymmetry is what makes the governance real rather than
@@ -170,9 +190,11 @@ constraints — roughly 85 lines, not the whole knowledge base.
 ```
 INDEX.md                        # map of every file — start here
 AGENTS.md                       # portable core rules — Kiro & Codex read this natively
+CHANGE-REQUEST.md               # ← the front door: you write intent here
+SOURCE-BRIEF.*                  # ← your original design, created by cdad-bootstrap, never touched again
+.gitignore                      # ignores __pycache__/ from the hook — merge into yours, don't overwrite it
 │
 cdad/
-├── CHANGE-REQUEST.md           # ← the front door: you write intent here
 ├── proposals/                  # agent drafts land here, awaiting your review
 ├── context/                    # L0 — governed, read-only for agents
 │   ├── stack.md                #   ← the map: 6 views, incl. observability
@@ -184,25 +206,27 @@ cdad/
 ├── adr/                        # L1 — accepted decisions
 ├── scripts/cdad-check-stack.sh # CI gate
 └── docs/                       # human reference, never loaded by agents
-    ├── METHODOLOGY.md
-    ├── PORTABILITY.md
-    └── MIGRATION.md
+    └── DOCS.md                 # methodology, portability, migration
 │
 .claude/
 ├── CLAUDE.md                   # imports AGENTS.md + Claude Code specifics
 ├── settings.json               # write protection for governed paths
 ├── hooks/protect-l0.py         # same block via shell too — exit 2
 ├── rules/                      # path-scoped: load only for matching files
-└── skills/                     # cdad-propose-change, cdad-adr, cdad-audit
+└── skills/                     # cdad-bootstrap, cdad-propose-change, cdad-adr, cdad-audit
 │
 .kiro/steering/                 # Kiro mirrors of the path-scoped rules
 ```
 
-### Why `.claude/` and `.kiro/` stay at the root
+### Why some files stay at the root
 
-Everything that is not a tool's fixed entry point lives under `cdad/`. `.claude/`
-and `.kiro/` are the exception, and it is not a style choice — it is how these
-tools discover their configuration.
+Everything that is not a tool's fixed entry point, and not one of the two
+files you touch yourself, lives under `cdad/`. `.claude/`, `.kiro/`,
+`CHANGE-REQUEST.md`, and `SOURCE-BRIEF.*` are the exceptions, for two
+different reasons.
+
+`.claude/` and `.kiro/` staying at the root is not a style choice — it is how
+these tools discover their configuration.
 
 Claude Code loads `./CLAUDE.md` or `./.claude/CLAUDE.md` (plus ancestor
 directories above the cwd) at session start. It does not walk into arbitrary
@@ -219,6 +243,15 @@ and Codex read natively by convention. Only content that no tool discovers by
 fixed path — docs, the CI script, `CLAUDE.md` itself once redirected through
 `.claude/CLAUDE.md` — is free to move into `cdad/`.
 
+`CHANGE-REQUEST.md` and `SOURCE-BRIEF.*` stay at the root for a different
+reason: not tool discovery, yours. No tool reads either one automatically, so
+nothing would break if they lived under `cdad/`. But they are the only two
+files the Solution Designer ever needs to find — one on day one, one whenever
+a decision needs to change — and burying them next to two dozen machinery
+files defeats the point of having a single, obvious front door. Both stay
+exactly as protected as any file in `cdad/context/` or `cdad/adr/` — the
+permission rules and the hook target them by name, not by location.
+
 ---
 
 ## Context layers
@@ -234,16 +267,24 @@ fixed path — docs, the CI script, `CLAUDE.md` itself once redirected through
 
 ## Getting started
 
-1. Copy `INDEX.md`, `AGENTS.md`, `.claude/` (includes `.claude/CLAUDE.md`),
-   `cdad/` (includes `cdad/docs/` and `cdad/scripts/`), and `.kiro/` if you use
-   Kiro into your project root. Do not recreate `CLAUDE.md`, `docs/`, or
-   `scripts/` as separate top-level folders — those live inside `.claude/` and
-   `cdad/` now.
-2. Fill in `cdad/context/stack.md` first. It forces the decisions the other
-   files describe in prose. Leave a cell empty rather than guessing — an empty
-   cell is a decision not yet made, and saying so is the point.
-3. Fill in the rest of `cdad/context/`. Keep `constraints.md` short: it is the
-   only one loaded on every session.
+1. Copy `INDEX.md`, `AGENTS.md`, `CHANGE-REQUEST.md`, `.claude/` (includes
+   `.claude/CLAUDE.md`), `cdad/` (includes `cdad/docs/` and `cdad/scripts/`),
+   and `.kiro/` if you use Kiro into your project root. `CHANGE-REQUEST.md`
+   belongs at the root exactly as shipped — do not move it under `cdad/`, and
+   do not recreate `CLAUDE.md`, `docs/`, or `scripts/` as separate top-level
+   folders either; those live inside `.claude/` and `cdad/` now. Merge the
+   kit's `.gitignore` into your own if you already have one — it just ignores
+   the `__pycache__/` the protection hook generates the first time it runs.
+2. Run the `cdad-bootstrap` skill (say *"bootstrap CDAD"* or *"set up CDAD"*)
+   instead of filling `cdad/context/` by hand. It checks whether you already
+   have a solution document, asks you directly for whatever it doesn't answer,
+   confirms the result with you, and only then drafts the six files for you to
+   apply. Keep `constraints.md` short either way: it is the only one loaded on
+   every session.
+3. If you'd rather fill it in yourself: start with `cdad/context/stack.md`, it
+   forces the decisions the other files describe in prose. Leave a cell empty
+   rather than guessing — an empty cell is a decision not yet made, and saying
+   so is the point.
 4. Adjust the `paths:` globs in `.claude/rules/` to your folder layout. They
    ship with `src/`, `tests/`, `infra/`, `deploy/`.
 5. Wire `cdad/scripts/cdad-check-stack.sh` into CI against your default branch.
@@ -254,7 +295,7 @@ fixed path — docs, the CI script, `CLAUDE.md` itself once redirected through
    only hesitates, the enforcement layer is not loading.
 
 Full file map: [`INDEX.md`](INDEX.md) · Upgrading from v1:
-[`cdad/docs/MIGRATION.md`](cdad/docs/MIGRATION.md)
+[`cdad/docs/DOCS.md`](cdad/docs/DOCS.md#migrating-from-cdad-v1)
 
 ---
 
@@ -272,7 +313,7 @@ Claude Code runs everything. Kiro runs everything except the declarative write
 block — fall back to `chmod -R a-w cdad/context` or the CI gate. Codex keeps the
 write block but loses fine-grained conditional loading.
 
-Details and workarounds: [`cdad/docs/PORTABILITY.md`](cdad/docs/PORTABILITY.md)
+Details and workarounds: [`cdad/docs/DOCS.md`](cdad/docs/DOCS.md#portability-claude-code-kiro-codex)
 
 ### Delete what you don't use
 
@@ -326,8 +367,11 @@ smaller there than on Claude Code.
 
 ## What you maintain
 
-Only `cdad/context/` and `cdad/adr/`. Everything under `.claude/`, `.kiro/`, and
-`cdad/scripts/` is CDAD runtime and rarely needs changes beyond the path globs.
+`cdad/context/` and `cdad/adr/` — applied by you, never written by an agent.
+`CHANGE-REQUEST.md` is yours to fill in whenever something needs to change.
+`SOURCE-BRIEF.*` is written once, by `cdad-bootstrap`, then left alone.
+Everything under `.claude/`, `.kiro/`, and `cdad/scripts/` is CDAD runtime and
+rarely needs changes beyond the path globs.
 
 ---
 

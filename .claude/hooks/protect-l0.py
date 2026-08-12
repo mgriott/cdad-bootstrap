@@ -13,16 +13,30 @@ import json
 import re
 import sys
 
-PROTECTED = re.compile(r"cdad/(context|adr)/|cdad/CHANGE-REQUEST\.md")
+ALWAYS_PROTECTED = re.compile(r"cdad/(context|adr)/")
+ROOT_FILES = re.compile(r"CHANGE-REQUEST\.md|SOURCE-BRIEF\.")
 MUTATING_SHELL = re.compile(
-    r"\b(sed\s+-i|tee|mv|cp|rm|truncate|dd|install)\b|>>?\s*\S*cdad/"
+    r"\b(sed\s+-i|tee|mv|cp|rm|truncate|dd|install)\b"
+    r"|>>?\s*\S*(cdad/|CHANGE-REQUEST\.md|SOURCE-BRIEF\.)"
 )
 
 REASON = (
-    "CDAD governance: cdad/context/, cdad/adr/ and cdad/CHANGE-REQUEST.md are "
-    "owned by the Solution Designer. Write your draft to cdad/proposals/ "
-    "instead - that directory is yours. Use the cdad-propose-change skill."
+    "CDAD governance: cdad/context/, cdad/adr/, CHANGE-REQUEST.md, and "
+    "SOURCE-BRIEF.* are owned by the Solution Designer. Write your draft to "
+    "cdad/proposals/ instead - that directory is yours. Use the "
+    "cdad-propose-change or cdad-bootstrap skill."
 )
+
+
+def is_protected(target: str) -> bool:
+    if ALWAYS_PROTECTED.search(target):
+        return True
+    # cdad/proposals/ is the one directory an agent may always write to -
+    # SOURCE-BRIEF.* and CHANGE-REQUEST.md are only protected outside it
+    # (e.g. cdad-bootstrap staging cdad/proposals/bootstrap/SOURCE-BRIEF.md).
+    if "cdad/proposals/" in target:
+        return False
+    return bool(ROOT_FILES.search(target))
 
 
 def main() -> int:
@@ -43,7 +57,7 @@ def main() -> int:
         if MUTATING_SHELL.search(command):
             target = command
 
-    if target and PROTECTED.search(target):
+    if target and is_protected(target):
         print(
             json.dumps(
                 {
