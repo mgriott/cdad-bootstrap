@@ -16,27 +16,25 @@ history lives in `cdad/adr/`.
 ## CDAD Request
 
 ```text
-CDAD:
-Cambio: <what needs to change in the design or system architecture>
-Motivo: <why this change is needed>
+Change: <what needs to change in the design or system architecture>
+Reason: <why this change is needed>
 Trigger: <what event caused the request: bug, cost, limit, requirement, review, etc.>
-Alcance: <what is included and what is intentionally out of scope>
-Impacto: <systems, modules, teams, dependencies, adoption cost, migration implications>
-Riesgo: <technical, operational, delivery, and adoption risk>
-Prioridad: <critical / high / medium / low>
+Scope: <what is included and what is intentionally out of scope>
+Impact: <systems, modules, teams, dependencies, adoption cost, migration implications>
+Risk: <technical, operational, delivery, and adoption risk>
+Priority: <critical / high / medium / low>
 ```
 
 ### Example
 
 ```text
-CDAD:
-Cambio: Introducir autenticación basada en OAuth2 con soporte para SSO multi-tenant.
-Motivo: El sistema actual depende de credenciales locales y no escala para clientes con políticas de identidad centralizadas.
-Trigger: Nuevo requisito de negocio y auditoría de seguridad.
-Alcance: Cambia el flujo de autenticación, la capa de sesión y la configuración de proveedores; no modifica la lógica de negocio de dominios internos.
-Impacto: Se afectan los servicios de acceso, la gestión de sesiones, la configuración de entorno y la experiencia de onboarding.
-Riesgo: Alto por compatibilidad con usuarios existentes, integración con proveedores externos y fallos de migración.
-Prioridad: High
+Change: Introduce OAuth2-based authentication with multi-tenant SSO support.
+Reason: The current system depends on local credentials and does not scale for clients with centralized identity policies.
+Trigger: New business requirement and a security audit.
+Scope: Changes the authentication flow, the session layer, and provider configuration; does not modify internal domain business logic.
+Impact: Affects access services, session management, environment configuration, and the onboarding experience.
+Risk: High, due to compatibility with existing users, integration with external providers, and possible migration failures.
+Priority: High
 ```
 
 ---
