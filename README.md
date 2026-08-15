@@ -126,8 +126,9 @@ CHANGE-REQUEST.md  ->  cdad/proposals/  ->  cdad/adr/ + cdad/context/stack.md
      always writable       agent writable         blocked for agents
 ```
 
-Write four lines in `CHANGE-REQUEST.md`, at the project root — what, why, what
-triggered it, how urgent. Say *"process the change request"*. The agent
+Fill in the request block in `CHANGE-REQUEST.md`, at the project root — what
+needs to change, why, what triggered it, scope, impact, risk, priority. Say
+*"process the change request"*. The agent
 returns a complete proposal: current decision, suggested change, impact, risk,
 alternatives, and the exact stack map rows that change. You approve; it drafts
 the ADR; you apply.

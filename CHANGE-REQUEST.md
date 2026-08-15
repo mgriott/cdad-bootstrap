@@ -1,58 +1,64 @@
 # Change Request
 
 **This is the front door. To change anything governed — stack, architecture,
-principles, constraints, vision — write it here and nowhere else.**
+principles, constraints, vision, or product-level design intent — write it here
+and nowhere else.**
 
-Keep it short. You are stating intent, not writing the decision. The agent turns
-this into a full proposal; you approve it; then it becomes an ADR and the map is
-updated.
+This file is not a decision log and not a pull request. It is a formal request
+for architectural review. The agent may read it, analyze it, and draft a
+proposal, but it does not modify the governed context or ADRs directly.
 
 Overwrite the block below each time. This file is a desk, not an archive — the
 history lives in `cdad/adr/`.
 
 ---
 
-## Request
+## CDAD Request
 
-**What I want to change:**
-<!-- A line or two is enough. Or paste the updated paragraph/section from your
-     design document as-is if that's easier — you don't need to compress it
-     into your own words first. Either way works. -->
+```text
+CDAD:
+Cambio: <what needs to change in the design or system architecture>
+Motivo: <why this change is needed>
+Trigger: <what event caused the request: bug, cost, limit, requirement, review, etc.>
+Alcance: <what is included and what is intentionally out of scope>
+Impacto: <systems, modules, teams, dependencies, adoption cost, migration implications>
+Riesgo: <technical, operational, delivery, and adoption risk>
+Prioridad: <critical / high / medium / low>
+```
 
+### Example
 
-**Why:**
-
-
-**What made this come up:**
-<!-- a bug, a cost, a limit hit, a new requirement, a review comment -->
-
-
-**How urgent:**
-<!-- blocking work now / next sprint / just thinking out loud -->
-
+```text
+CDAD:
+Cambio: Introducir autenticación basada en OAuth2 con soporte para SSO multi-tenant.
+Motivo: El sistema actual depende de credenciales locales y no escala para clientes con políticas de identidad centralizadas.
+Trigger: Nuevo requisito de negocio y auditoría de seguridad.
+Alcance: Cambia el flujo de autenticación, la capa de sesión y la configuración de proveedores; no modifica la lógica de negocio de dominios internos.
+Impacto: Se afectan los servicios de acceso, la gestión de sesiones, la configuración de entorno y la experiencia de onboarding.
+Riesgo: Alto por compatibilidad con usuarios existentes, integración con proveedores externos y fallos de migración.
+Prioridad: High
+```
 
 ---
 
 ## How to use this
 
-1. Fill in the block above. Four lines is enough — or paste the relevant
-   updated section straight from your document if you'd rather not rewrite it.
+1. Fill in the request block above with the architectural intent.
 2. Tell your agent: *"process the change request"*.
-3. The agent reads this file plus the governed context, and writes a full
-   proposal to `cdad/proposals/`. It does not touch `cdad/context/` or
-   `cdad/adr/` — those stay yours.
-4. Read the proposal. Reject it, send it back, or approve it.
+3. The agent reads this file and the governed context, then writes a full
+   proposal to `cdad/proposals/`.
+4. Review the proposal. Reject it, request changes, or approve it.
 5. On approval, the agent drafts the ADR and the exact stack map delta. You
    apply both.
 
 If you are only asking a question ("is this even possible?", "what would this
-cost us?"), just ask in chat. This file is for changes you intend to make.
+cost us?"), ask in chat instead. This file is for changes you intend to make.
 
 ## What does not belong here
 
-Implementation work. Bugs, features, refactors inside existing boundaries, and
-anything under `src/` never touches this file — that is L3 and the agent can
-just do it.
+Implementation work. Bugs, feature requests, refactors inside existing
+boundaries, and anything under `src/` never belongs here — that is L3 and can be
+handled directly in implementation.
 
 If you find yourself filling this in for routine work, the constraints in
 `cdad/context/` are written too broadly. Narrow them.

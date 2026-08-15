@@ -16,10 +16,10 @@ the project root, first. It holds the Solution Designer's stated intent. If
 the request block is empty or unchanged from the template, say so and stop —
 do not invent one.
 
-"What I want to change" may be a tight one-liner or a raw paragraph pasted
-straight from the Solution Designer's own document — both are valid input, not
-just the former. Read a pasted excerpt for what it actually decides; do not ask
-them to compress it into bullets first.
+The request block may be filled in tersely or as a raw paragraph pasted
+straight from the Solution Designer's own document — both are valid input.
+Read a pasted excerpt for what it actually decides; do not ask them to
+compress it into the template's fields first.
 
 Otherwise the request is whatever the user just described.
 
