@@ -10,7 +10,9 @@ context. If you read one file to orient yourself, read this one.
 | I want to... | Go to |
 |---|---|
 | Populate CDAD for the first time in this project | drop your solution doc at the project root, any name (optional), then run the `cdad-bootstrap` skill |
+| Ratify a freshly-bootstrapped context so it becomes read-only | `cdad/scripts/cdad-freeze.sh` |
 | Change the stack, architecture, or any directive | `CHANGE-REQUEST.md`, at the project root |
+| Check whether an L3 change (infra, a manifest) contradicts ratified architecture | `.claude/skills/cdad-drift-response/SKILL.md`, or wait for the `CDAD DRIFT SIGNAL` warning |
 | See what this system is, in one screen | `cdad/context/stack.md` |
 | Understand why CDAD works this way | `cdad/docs/DOCS.md` (Methodology) |
 | Set this up in my project | `README.md` |
@@ -19,13 +21,17 @@ context. If you read one file to orient yourself, read this one.
 
 ---
 
-## Governed context — you own it, agents cannot write it
+## Governed context — you own it, agents cannot write it once frozen
+
+Pre-freeze (`cdad/.frozen` absent), `cdad/context/` and `cdad/adr/` are the one
+exception: `cdad-bootstrap` writes them directly. See `cdad/.frozen` under
+*Enforcement* below.
 
 | File | Layer | Contains | Loads |
 |---|---|---|---|
 | `CHANGE-REQUEST.md` (project root) | — | Your standing request desk. The only input door | never |
 | `SOURCE-BRIEF.*` (project root) | — | Your original design document, if one existed. Written once by `cdad-bootstrap`, then locked — not present if the context came entirely from conversation | never |
-| `cdad/context/stack.md` | L0 | **The map**: stack table, components, topology, observability, dependency rules, change log | on demand |
+| `cdad/context/stack.md` | L0 | **The map**: stack table, components, topology, observability, dependency rules, drift signals, change log | on demand |
 | `cdad/context/architecture.md` | L0 | Architecture in prose, module responsibilities | on demand |
 | `cdad/context/constraints.md` | L0 | Hard limits. Kept short because it is always loaded | **always** |
 | `cdad/context/principles.md` | L0 | Design principles in force | on demand |
@@ -55,18 +61,24 @@ context. If you read one file to orient yourself, read this one.
 
 | File | Invoked when |
 |---|---|
-| `.claude/skills/cdad-bootstrap/SKILL.md` | first time populating `cdad/context/`, right after cloning the kit |
+| `.claude/skills/cdad-bootstrap/SKILL.md` | first time populating `cdad/context/`, pre-freeze, right after cloning the kit |
 | `.claude/skills/cdad-propose-change/SKILL.md` | processing a change request, or a change is needed |
 | `.claude/skills/cdad-adr/SKILL.md` | a change was approved and needs recording |
-| `.claude/skills/cdad-audit/SKILL.md` | checking whether context still matches the code |
+| `.claude/skills/cdad-audit/SKILL.md` | checking whether context still matches the code — also the scheduled sweep counterpart to the drift detector below |
+| `.claude/skills/cdad-drift-response/SKILL.md` | a `CDAD DRIFT SIGNAL` fired, `cdad-audit` found a divergence, or you're asking whether an L3 change contradicts ratified architecture |
 
 ## Enforcement — costs zero context
 
 | File | Does |
 |---|---|
-| `.claude/settings.json` | Denies writes to governed paths |
-| `.claude/hooks/protect-l0.py` | Blocks the same paths via shell too. Exit 2 |
-| `cdad/scripts/cdad-check-stack.sh` | CI gate: an ADR without a map update fails the build |
+| `cdad/.frozen` | The regime marker. Absent = pre-freeze, `cdad/context/`/`cdad/adr/` are agent-writable. Present = governed, they're denied. Human-written only, via `cdad-freeze.sh`; versioned, not ignored |
+| `cdad/scripts/cdad-freeze.sh` | Run by the Solution Designer to ratify: validates L0 has real content, then writes `cdad/.frozen` |
+| `.claude/settings.json` | Denies writes to governance machinery unconditionally; registers both hooks below |
+| `.claude/hooks/protect-l0.py` | `PreToolUse`. Regime-aware: blocks `cdad/context/`/`cdad/adr/`/`SOURCE-BRIEF.*` only once frozen; blocks machinery paths always, via shell too. Exit 2 |
+| `.claude/hooks/detect-drift.py` | `PostToolUse`, governed regime only. Warns (never blocks) when a write matches the `cdad-drift-signals` block in `stack.md`. Deduplicated per session |
+| `.kiro/permissions.yaml` | Kiro's declarative equivalent of the machinery-path deny (1.0+) |
+| `.kiro/hooks/detect-drift.json` | Kiro mirror of `detect-drift.py` — same script, different trigger wiring |
+| `cdad/scripts/cdad-check-stack.sh` | CI gate: an ADR without a map update fails the build; also checks referential integrity of ADR citations and warns if the drift-signals block is missing |
 
 ## Human documentation — never loaded by any agent
 

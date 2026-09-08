@@ -64,6 +64,12 @@ Instructions remain necessary for everything that requires judgment: whether a
 change is architectural, whether code contradicts context, whether an
 abstraction is warranted. No permission rule can decide those.
 
+The drift detector (`detect-drift.py`, see [Drift detection](#drift-detection))
+lives in the control plane too — a deterministic hook, zero tokens per
+session — but its output is advisory, not a block. It is not a fifth plane; it
+extends the control plane's reach from paths to decisions without making L3
+governed territory, since L3 stays free by design.
+
 ### What lives where
 
 | Concern | Location | Loads |
@@ -114,6 +120,31 @@ changes, and generate implementation aligned with the governed context.
 **The golden rule:** an agent may suggest, analyze, and accelerate. It may not
 redefine architecture without explicit approval from the Solution Designer.
 
+### Two regimes
+
+`cdad/context/`, `cdad/adr/`, and `SOURCE-BRIEF.*` are not protected
+unconditionally — they are protected only once something has actually been
+ratified. Enforcement (ADR-008) is split into two regimes, discriminated by
+the marker file `cdad/.frozen`:
+
+| Regime | Condition | Those paths |
+|---|---|---|
+| Pre-freeze | `cdad/.frozen` absent | writable by the agent |
+| Governed | `cdad/.frozen` present | denied |
+
+This exists because the alternative — one unconditional deny — is wrong at the
+moment a project is created, when the six context files are still template
+placeholders and there is nothing ratified to protect yet. `cdad-bootstrap`
+writes them directly in this window; the Solution Designer then runs
+`cdad/scripts/cdad-freeze.sh`, which refuses to ratify placeholder content and
+writes the marker only once L0 is real. From that point the project is
+governed and those paths are read-only for agents again.
+
+Governance machinery — `AGENTS.md`, `.claude/settings.json`, `.claude/hooks/`,
+`CHANGE-REQUEST.md`, the Kiro equivalents, and the marker itself — has no
+regime exception. It is denied in both regimes, always: an agent never drafts
+its own directives or its own enforcement.
+
 ### The map
 
 `cdad/context/stack.md` is the one page that answers "what is this system" in a
@@ -145,6 +176,33 @@ Context freshness is therefore an operational responsibility, not a
 documentation chore. Run the `cdad-audit` skill before releases and after large
 merges. When implementation and context diverge, the Solution Designer decides
 which one is wrong; the agent is not permitted to assume the code is right.
+
+### Drift detection
+
+The control plane above protects paths, L3 is free by design, and a change
+there can contradict a ratified decision without touching any denied path —
+editing `docker-compose.yml` can silently override a datastore decision locked
+in `stack.md`. ADR-009 extends the control plane from paths to decisions
+without making L3 governed territory.
+
+**One engine, two triggers.** A `cdad-drift-signals` block declared inside
+`cdad/context/stack.md` (L0, human-edited only) names the paths outside the
+governed tree that carry architectural weight. A single skill,
+`cdad-drift-response`, is the only path from a detected divergence to a
+proposal draft — it never runs unratified.
+
+1. **Write-time.** `detect-drift.py`, a `PostToolUse` hook, compares each
+   write against the signals block and warns through stderr — advisory, never
+   blocking, deduplicated per session so a category warns once per session
+   rather than once ever.
+2. **Sweep.** `cdad-audit` reads the same signals block and sweeps every
+   matching file, not just what changed this session, then hands any
+   divergence to `cdad-drift-response` instead of drafting in its own format.
+
+Operates only under the governed regime — pre-freeze there is nothing ratified
+yet to contradict. Shell mutations of L3 are not detected by the hook (its
+`tool_input` is a command string, not a path); the CI gate is the net for
+that case, same as it is for the regime-conditional write block above.
 
 ### Operational boundary
 
@@ -202,13 +260,19 @@ The path-scoped rules are mirrored in `.kiro/steering/` using
 `inclusion: fileMatch` with a `fileMatchPattern`. Kiro accepts one pattern per
 file, so a rule covering several globs becomes several steering files.
 
-What Kiro does not have is an equivalent of `permissions.deny`. The L0
-protection degrades to instruction only. Two workarounds, in order of strength:
+Since Kiro IDE 1.0, declarative permissions exist in `.kiro/permissions.yaml`
+(`deny` wins over `ask`/`allow`), covering the unconditional machinery paths —
+`AGENTS.md`, `.claude/**`, `.kiro/settings|steering|hooks/**`,
+`cdad/.frozen` — the same way `permissions.deny` does for Claude Code.
 
-1. Make `cdad/context/` read-only on disk: `chmod -R a-w cdad/context`. Crude,
-   tool-independent, and effective — the write fails at the filesystem.
-2. Rely on the CI gate. `cdad/scripts/cdad-check-stack.sh` plus a branch rule
-   requiring review on `cdad/**` catches what reaches a pull request.
+What `permissions.yaml` cannot express is the two-regime condition on
+`cdad/context/` and `cdad/adr/`: whether they are writable depends on whether
+`cdad/.frozen` exists, and a static config file has no way to test that. Those
+two paths still fall back to the CI gate: `cdad/scripts/cdad-check-stack.sh`
+plus a branch rule requiring review on `cdad/**` catches what reaches a pull
+request. (The drift detector, `detect-drift.py`, is different: it is advisory
+rather than a write block, so it mirrors cleanly to Kiro as
+`.kiro/hooks/detect-drift.json` — see the Drift detection section.)
 
 Known issue: global steering in `~/.kiro/steering/` has had reports of
 `fileMatch` not triggering. Keep CDAD steering in the workspace, not global.

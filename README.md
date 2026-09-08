@@ -42,15 +42,17 @@ to start with, the more it asks, and that's expected
 → summarizes the result and waits for your explicit confirmation — a second,
 separate confirmation from the one above: that one was about your design being
 settled, this one is about whether the six files actually capture it
-→ only then drafts the completed context files — plus your source document,
-renamed `SOURCE-BRIEF.*`, if you had one — to `cdad/proposals/bootstrap/`, and
-hands you the commands to apply them, so it ends up permanently at the
-project root, not tucked away
+→ only then writes the completed context files directly — plus your source
+document, renamed `SOURCE-BRIEF.*`, if you had one, permanently at the project
+root, not tucked away — and tells you to review it, then run
+`cdad/scripts/cdad-freeze.sh` to ratify it
 
-The agent never writes `cdad/context/` itself, not even on the very first run —
-`cdad-bootstrap` goes through the same propose-then-you-apply flow as every
-other change to governed context. See `.claude/skills/cdad-bootstrap/SKILL.md`
-for the full procedure.
+Before the project is frozen, there is nothing ratified yet to protect, so the
+agent may write `cdad/context/` directly as part of this one-time bootstrap.
+Freezing is a human act: it validates the context is not still placeholder
+text, then writes the `cdad/.frozen` marker that switches the project into the
+governed regime, where those paths become read-only for the agent again. See
+`.claude/skills/cdad-bootstrap/SKILL.md` for the full procedure.
 
 From that point on, the agent reads that governed context first, before
 making any implementation decision.
@@ -295,6 +297,13 @@ permission rules and the hook target them by name, not by location.
    `cdad/context/stack.md`. It must be *blocked*, not merely reluctant. If it
    only hesitates, the enforcement layer is not loading.
 
+### Upgrading to the two-regime model
+
+If you are pulling this change into a project bootstrapped before it existed,
+run `./cdad/scripts/cdad-freeze.sh` immediately after upgrading, if
+`cdad/context/` already holds real content. Until you do, that content is
+agent-writable again.
+
 Full file map: [`INDEX.md`](INDEX.md) · Upgrading from v1:
 [`cdad/docs/DOCS.md`](cdad/docs/DOCS.md#migrating-from-cdad-v1)
 
@@ -307,12 +316,14 @@ Full file map: [`INDEX.md`](INDEX.md) · Upgrading from v1:
 | Portable core rules | via import | native | native |
 | Conditional loading | `paths:` | `inclusion: fileMatch` | nested `AGENTS.md` |
 | On-demand procedures | Skills | `inclusion: manual` | prompt |
-| Deterministic write block | yes | filesystem or CI | config globs |
+| Deterministic write block | yes | `permissions.yaml` (1.0+) | config globs |
 | Governed context + CI gate | yes | yes | yes |
 
-Claude Code runs everything. Kiro runs everything except the declarative write
-block — fall back to `chmod -R a-w cdad/context` or the CI gate. Codex keeps the
-write block but loses fine-grained conditional loading.
+Claude Code runs everything. Kiro's `permissions.yaml` covers the unconditional
+machinery paths declaratively (1.0+); the regime-conditional paths
+(`cdad/context/`, `cdad/adr/`) fall back to the shared hook plus the CI gate,
+since a static file cannot express a condition on `cdad/.frozen`. Codex keeps
+the write block but loses fine-grained conditional loading.
 
 Details and workarounds: [`cdad/docs/DOCS.md`](cdad/docs/DOCS.md#portability-claude-code-kiro-codex)
 
@@ -347,8 +358,10 @@ Two consequences worth knowing before you prune:
 
 **Deleting `.claude/` removes the enforcement layer.** `settings.json` and
 `hooks/protect-l0.py` are what make L0 protection deterministic rather than
-advisory. On Kiro or Codex you are falling back to `chmod -R a-w cdad/context`
-plus the CI gate — weaker, but still real. Do not skip both.
+advisory. On Kiro, `permissions.yaml` (1.0+) covers the unconditional machinery
+paths; on Codex, or for the regime-conditional `cdad/context/`/`cdad/adr/`
+paths on Kiro, you are falling back to the CI gate — weaker, but still real. Do
+not skip it.
 
 **On Codex, add nested instruction files.** Codex has no path-scoped rules, so
 recreate the effect by placing scoped `AGENTS.md` files near the code they

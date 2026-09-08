@@ -16,6 +16,36 @@ set -euo pipefail
 BASE="${1:-origin/main}"
 MAP="cdad/context/stack.md"
 
+if [ ! -f "cdad/.frozen" ]; then
+  echo "cdad-check-stack: project is not frozen yet, nothing to enforce."
+  exit 0
+fi
+
+# --- referential integrity: every ADR cited in the map must exist ---
+# Runs unconditionally (governed regime, any invocation) - a dangling
+# citation is wrong regardless of whether this diff touched an ADR.
+MISSING=""
+while read -r adr; do
+  [ -z "$adr" ] && continue
+  if ! ls "cdad/adr/${adr}"*.md >/dev/null 2>&1; then
+    MISSING="$MISSING  $adr\n"
+  fi
+done < <(grep -oE 'ADR-[0-9]{3}' "$MAP" | sort -u)
+
+if [ -n "$MISSING" ]; then
+  echo "cdad-check-stack: FAILED - the map cites ADRs that do not exist:" >&2
+  printf "%b" "$MISSING" >&2
+  echo "A citation to a file nobody can open is not governance." >&2
+  exit 1
+fi
+
+# --- drift-signals block presence ---
+if ! grep -q '^```cdad-drift-signals' "$MAP"; then
+  echo "cdad-check-stack: WARNING - $MAP has no cdad-drift-signals block."
+  echo "                  The drift detector cannot operate without it."
+  echo "                  This will become a hard failure in a future version."
+fi
+
 if ! git rev-parse --verify --quiet "$BASE" >/dev/null; then
   echo "cdad-check-stack: cannot resolve base ref '$BASE'" >&2
   exit 2

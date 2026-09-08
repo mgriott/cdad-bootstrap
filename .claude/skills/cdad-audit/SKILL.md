@@ -1,6 +1,6 @@
 ---
 name: cdad-audit
-description: Audit whether the governed context under cdad/context/ still matches the actual codebase. Use when the user asks to check context freshness, verify the docs are still accurate, review architectural drift, or run a CDAD audit — typically before a release, after a large merge, or when onboarding to an unfamiliar repo.
+description: Audit whether the governed context under cdad/context/ still matches the actual codebase. Use when the user asks to check context freshness, verify the docs are still accurate, review architectural drift, or run a CDAD audit — typically before a release, after a large merge, or when onboarding to an unfamiliar repo. The scheduled counterpart to the PostToolUse drift detector: same signals, same response path, full sweep instead of one file.
 ---
 
 # Audit context freshness
@@ -33,6 +33,28 @@ what the repository actually does.
 
 Every row in "Stack at a glance" with no ADR in its "Locked by" column is a
 finding: a decision that entered the system without passing through governance.
+
+## The drift-signals sweep
+
+This is not a second, independent drift mechanism — it is the full-sweep
+trigger of the same loop `detect-drift.py` runs reactively at write-time. One
+signals block, one response skill, two triggers.
+
+Read the `cdad-drift-signals` block from `cdad/context/stack.md` (its
+"Drift signals" view). Instead of checking a single freshly-written file the
+way the hook does, sweep every file in the repository that matches any of its
+globs, not only files touched in this session. For each match, assess whether
+it contradicts `cdad/context/` or an accepted ADR the same way
+`cdad-drift-response` would.
+
+If `stack.md` has no `cdad-drift-signals` block, say so as a finding — the
+detector is blind without it — and skip the sweep.
+
+On finding a divergence, do not draft the proposal yourself. Invoke the
+`cdad-drift-response` skill to assess and draft it. One skill writes proposals
+for drift, regardless of whether it was found by a write-time warning, this
+sweep, or a direct question — that is what keeps drift from being defined
+twice and the two definitions ageing apart.
 
 ## Classification
 
@@ -75,3 +97,5 @@ Recommended action
 Report only. Do not edit `cdad/context/`, do not fix the drift in code, and do
 not soften a finding because the code looks reasonable. The Solution Designer
 decides whether the context or the implementation is the thing that is wrong.
+Divergences found by the drift-signals sweep are handed to `cdad-drift-response`
+to draft, not drafted here.

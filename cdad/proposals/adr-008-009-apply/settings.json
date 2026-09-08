@@ -1,0 +1,52 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(/AGENTS.md)",
+      "Write(/AGENTS.md)",
+      "Edit(/CHANGE-REQUEST.md)",
+      "Write(/CHANGE-REQUEST.md)",
+      "Edit(/.claude/settings.json)",
+      "Write(/.claude/settings.json)",
+      "Edit(/.claude/settings.local.json)",
+      "Write(/.claude/settings.local.json)",
+      "Edit(/.claude/rules/**)",
+      "Write(/.claude/rules/**)",
+      "Edit(/.claude/hooks/**)",
+      "Write(/.claude/hooks/**)",
+      "Edit(/.kiro/settings/**)",
+      "Write(/.kiro/settings/**)",
+      "Edit(/.kiro/steering/**)",
+      "Write(/.kiro/steering/**)",
+      "Edit(/.kiro/hooks/**)",
+      "Write(/.kiro/hooks/**)",
+      "Edit(/.kiro/permissions.yaml)",
+      "Write(/.kiro/permissions.yaml)",
+      "Edit(/cdad/.frozen)",
+      "Write(/cdad/.frozen)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/protect-l0.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/detect-drift.py"
+          }
+        ]
+      }
+    ]
+  }
+}

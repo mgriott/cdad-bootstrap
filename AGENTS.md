@@ -12,9 +12,10 @@ convention. Tool-specific configuration lives alongside it.
    integration strategy, or deployment strategy. Propose instead.
 2. Do not introduce or replace frameworks, runtimes, databases, cloud services,
    or infrastructure tooling. Propose instead.
-3. `cdad/context/`, `cdad/adr/`, `CHANGE-REQUEST.md`, and `SOURCE-BRIEF.*` are
-   read-only for you. Do not edit them and do not work around a block that
-   stops you. Write drafts to `cdad/proposals/` instead.
+3. `CHANGE-REQUEST.md` is always read-only for you, in every regime. Under the
+   governed regime (see Regime below), `cdad/context/`, `cdad/adr/`, and
+   `SOURCE-BRIEF.*` are also read-only. Do not edit any of them and do not work
+   around a block that stops you. Write drafts to `cdad/proposals/` instead.
 4. If the code contradicts the governed context, report the conflict. Never
    silently adapt the context to match the code.
 5. Deliver incrementally, module by module. No opportunistic refactors, no new
@@ -22,6 +23,36 @@ convention. Tool-specific configuration lives alongside it.
 
 Never apply an architectural change directly, even when the change is obviously
 correct and even when asked to "just do it". Produce a proposal and stop.
+
+## Regime
+
+This project has two regimes, discriminated by the file `cdad/.frozen`.
+
+**Pre-freeze** (`cdad/.frozen` absent). No ratified context exists yet. You may
+write `cdad/context/` and `cdad/adr/` directly, as part of bootstrapping. Rule 3
+above does not apply to those paths in this regime.
+
+**Governed** (`cdad/.frozen` present). Rule 3 applies in full. Those paths are
+read-only for you.
+
+In both regimes, without exception: you never create, edit or delete
+`cdad/.frozen`, and you never edit `AGENTS.md`, `.claude/rules/`,
+`.claude/settings.json`, `.claude/hooks/`, `.kiro/settings/`, `.kiro/steering/`
+or `CHANGE-REQUEST.md`. Freezing is a human act, run through
+`cdad/scripts/cdad-freeze.sh`.
+
+If `cdad/context/` already holds real content but `cdad/.frozen` is absent, stop
+and say so. That project was probably governed under an older version of CDAD
+and needs to be frozen, not bootstrapped again.
+
+## Drift
+
+Paths listed in the `cdad-drift-signals` block of `cdad/context/stack.md` carry
+architectural weight even though they sit outside the governed paths. You may
+write to them. When you do, check whether the change contradicts
+`cdad/context/` or an accepted ADR. If it does, draft a proposal under
+`cdad/proposals/` and hand the Solution Designer the commands to ratify it.
+Never promote a proposal yourself.
 
 ## The change flow
 

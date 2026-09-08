@@ -1,0 +1,12 @@
+version: 1
+permissions:
+  fileWrite:
+    deny:
+      - "AGENTS.md"
+      - "CHANGE-REQUEST.md"
+      - ".kiro/settings/**"
+      - ".kiro/steering/**"
+      - ".kiro/hooks/**"
+      - ".kiro/permissions.yaml"
+      - ".claude/**"
+      - "cdad/.frozen"

@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "event": "postToolUse",
+  "matcher": { "tools": ["write", "edit"] },
+  "command": "python3 .claude/hooks/detect-drift.py"
+}

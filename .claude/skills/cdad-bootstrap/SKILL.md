@@ -10,12 +10,19 @@ table rows, not real answers. This skill turns those placeholders into the
 project's actual context, confirmed by the Solution Designer before anything
 is written.
 
-## 0. Check the context is actually unpopulated
+## 0. Establish the regime
 
-Read the six files in `cdad/context/`. If they already contain real content —
-not placeholders like `<layered / hexagonal / ...>` or empty table rows — stop
-and say so. Offer the `cdad-audit` skill instead. Do not overwrite an already
-populated context.
+Two independent questions. Cross them before doing anything.
+
+| `cdad/context/` has real content? | `cdad/.frozen` exists? | Action |
+|---|---|---|
+| No | No | Normal case. Proceed to step 1. |
+| No | Yes | Anomaly — freeze validates content before writing the marker, so this should be impossible. Stop. Report the inconsistency. Do not guess which side is right. |
+| Yes | Yes | Normal governed state. Bootstrap does not apply. Offer `cdad-audit` instead. |
+| Yes | No | **Migration case.** Say exactly: "cdad/context/ is populated but cdad/.frozen is absent. If this project was already governed before this version of CDAD, run cdad/scripts/cdad-freeze.sh now rather than treating this as a fresh bootstrap." Stop. Do not offer to overwrite it. |
+
+"Real content" means not placeholders like `<layered / hexagonal / ...>` or
+empty table rows.
 
 ## 1. Look for an existing solution document
 
@@ -99,37 +106,22 @@ Summarize what will go into each of the six files — not the full file text,
 enough to review in one pass — and get explicit confirmation from the
 Solution Designer before writing anything. Silence is not confirmation.
 
-## 5. Draft, do not write
+## 5. Write the context, then stop
 
-`cdad/context/` is write-protected for you, same as for any other change.
-Write the six completed files to `cdad/proposals/bootstrap/`, using the exact
-target filenames (`stack.md`, `architecture.md`, `constraints.md`,
-`principles.md`, `solution-vision.md`, `glossary.md`). Do not attempt to write
-into `cdad/context/` yourself.
+The project is pre-freeze, so these paths are writable. Write directly the six
+files under `cdad/context/`, using the exact target filenames (`stack.md`,
+`architecture.md`, `constraints.md`, `principles.md`, `solution-vision.md`,
+`glossary.md`).
 
-If a source document existed (step 1), also copy it — unmodified, not
-paraphrased — to `cdad/proposals/bootstrap/SOURCE-BRIEF.<original-extension>`.
-It gets this canonical name regardless of what the original was called — that
-naming is the kit's own convention, not something the Solution Designer had to
-think about upfront. If it was pasted as chat text rather than a file, save
-exactly what was pasted as `cdad/proposals/bootstrap/SOURCE-BRIEF.md`. If there
-was no source document at all, skip this — the bootstrap conversation itself
-is the record in that case, and there is nothing to preserve. Once applied,
-`SOURCE-BRIEF.*` is write-protected the same as `CHANGE-REQUEST.md` — you
-create it exactly once, here, and never touch it again.
+If a source document existed (step 1), also write it at the project root as
+`SOURCE-BRIEF`, keeping the original file extension, unmodified and not
+paraphrased.
 
-Tell the Solution Designer the commands to apply everything. Fill in the real
-root filename from step 1 on the last line, if there was one — it varies, you
-know it by now:
+The accepted-decisions folder is writable in this same window: if
+`ADR-001-context-governance.md` is not already there, write it too.
 
-```bash
-cp cdad/proposals/bootstrap/{stack,architecture,constraints,principles,solution-vision,glossary}.md cdad/context/
-cp cdad/proposals/bootstrap/SOURCE-BRIEF.* .   # to the project root — skip if no source document existed
-rm -r cdad/proposals/bootstrap
-rm <the original root filename>   # only if it differs from SOURCE-BRIEF.* — no duplicate copies at the root
-```
-
-They run it, not you.
+Then stop, without touching the freeze marker. End with a note telling the
+Solution Designer to review and then run the freeze script to ratify.
 
 ## After bootstrap
 
